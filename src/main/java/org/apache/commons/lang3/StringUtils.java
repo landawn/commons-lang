@@ -6084,7 +6084,7 @@ public class StringUtils {
             final char ch0 = repeat.charAt(0);
             final char ch1 = repeat.charAt(1);
             final char[] output2 = new char[outputLength];
-            for (int i = count * 2 - 2; i >= 0; i--, i--) {
+            for (int i = count * 2 - 2; i >= 0; i -= 2) {
                 output2[i] = ch0;
                 output2[i + 1] = ch1;
             }

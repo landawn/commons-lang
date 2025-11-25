@@ -17,6 +17,8 @@
 package org.apache.commons.lang3.builder;
 
 import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.util.Map;
 import java.util.Objects;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -51,7 +53,10 @@ public abstract class Diff<T> extends Pair<T, T> {
      */
     protected Diff(final String fieldName) {
         this.fieldName = Objects.requireNonNull(fieldName);
-        this.type = ObjectUtils.getIfNull(TypeUtils.getTypeArguments(getClass(), Diff.class).get(Diff.class.getTypeParameters()[0]), Object.class);
+        final Map<TypeVariable<?>, Type> typeArguments = TypeUtils.getTypeArguments(getClass(), Diff.class);
+        this.type = ObjectUtils.getIfNull(
+                typeArguments != null ? typeArguments.get(Diff.class.getTypeParameters()[0]) : null,
+                Object.class);
     }
 
     Diff(final String fieldName, final Type type) {

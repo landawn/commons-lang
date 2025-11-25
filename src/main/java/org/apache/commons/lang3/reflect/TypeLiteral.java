@@ -18,6 +18,7 @@ package org.apache.commons.lang3.reflect;
 
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
+import java.util.Map;
 
 import org.apache.commons.lang3.Validate;
 
@@ -89,7 +90,8 @@ public abstract class TypeLiteral<T> implements Typed<T> {
      * Constructs a new instance.
      */
     protected TypeLiteral() {
-        this.value = Validate.notNull(TypeUtils.getTypeArguments(getClass(), TypeLiteral.class).get(T),
+        final Map<TypeVariable<?>, Type> typeArguments = TypeUtils.getTypeArguments(getClass(), TypeLiteral.class);
+        this.value = Validate.notNull(typeArguments != null ? typeArguments.get(T) : null,
                 "%s does not assign type parameter %s", getClass(), TypeUtils.toLongString(T));
         this.toString = String.format("%s<%s>", TypeLiteral.class.getSimpleName(), TypeUtils.toString(value));
     }
