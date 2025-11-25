@@ -54,7 +54,7 @@ import org.apache.commons.lang3.StringUtils;
  * The following example demonstrates this:
  * </p>
  * <pre>
- * Map valuesMap = HashMap();
+ * Map valuesMap = new HashMap();
  * valuesMap.put(&quot;animal&quot;, &quot;quick brown fox&quot;);
  * valuesMap.put(&quot;target&quot;, &quot;lazy dog&quot;);
  * String templateString = &quot;The ${animal} jumps over the ${target}.&quot;;
@@ -75,7 +75,7 @@ import org.apache.commons.lang3.StringUtils;
  * The following shows an example with variable default value settings:
  * </p>
  * <pre>
- * Map valuesMap = HashMap();
+ * Map valuesMap = new HashMap();
  * valuesMap.put(&quot;animal&quot;, &quot;quick brown fox&quot;);
  * valuesMap.put(&quot;target&quot;, &quot;lazy dog&quot;);
  * String templateString = &quot;The ${animal} jumps over the ${target}. ${undefined.number:-1234567890}.&quot;;

@@ -1342,13 +1342,13 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
      * StrBuilder whereClause = new StrBuilder();
      * if (searchCommand.getPriority() != null) {
      *  whereClause.appendSeparator(" and", " where");
-     *  whereClause.append(" priority = ?")
+     *  whereClause.append(" priority = ?");
      * }
      * if (searchCommand.getComponent() != null) {
      *  whereClause.appendSeparator(" and", " where");
-     *  whereClause.append(" component = ?")
+     *  whereClause.append(" component = ?");
      * }
-     * selectClause.append(whereClause)
+     * selectClause.append(whereClause);
      * </pre>
      *
      * @param standard the separator if builder is not empty, null means no separator

@@ -307,9 +307,9 @@ public class WordUtils {
      * A {@code null} input String returns {@code null}.</p>
      *
      * <pre>
-     * StringUtils.swapCase(null)                 = null
-     * StringUtils.swapCase("")                   = ""
-     * StringUtils.swapCase("The dog has a BONE") = "tHE DOG HAS A bone"
+     * WordUtils.swapCase(null)                 = null
+     * WordUtils.swapCase("")                   = ""
+     * WordUtils.swapCase("The dog has a BONE") = "tHE DOG HAS A bone"
      * </pre>
      *
      * @param str  the String to swap case, may be null.
