@@ -60,7 +60,7 @@ import org.apache.commons.lang3.stream.Streams.FailableStream;
  * </p>
  *
  * <pre>{@code
- * Functions.accept(m -> m.invoke(o, args));
+ * Failable.accept(m -> m.invoke(o, args), method);
  * }</pre>
  *
  * <p>
@@ -263,7 +263,7 @@ public class Failable {
      * @param <R>     The type of the result of the third function and this method.
      * @param <E1>    The type of thrown exception or error by the first function.
      * @param <E2>    The type of thrown exception or error by the second function.
-     * @param <E3>    The type of thrown exception or error by the second function.
+     * @param <E3>    The type of thrown exception or error by the third function.
      * @param value1  The value to apply the first function, may be {@code null}.
      * @param mapper1 The first function to apply, must not be {@code null}.
      * @param mapper2 The second function to apply, must not be {@code null}.
@@ -346,7 +346,7 @@ public class Failable {
      *
      * @param <T> The type of the input of the functions
      * @param <R> The type of the output of the functions
-     * @param function A {code FailableFunction}
+     * @param function A {@code FailableFunction}
      * @return A standard {@link Function}
      */
     public static <T, R> Function<T, R> asFunction(final FailableFunction<T, R, ?> function) {
@@ -553,7 +553,7 @@ public class Failable {
      * collections elements. Shortcut for
      *
      * <pre>
-     * Functions.stream(collection.stream());
+     * Failable.stream(collection.stream());
      * </pre>
      *
      * @param collection The collection, which is being converted into a {@link FailableStream}.
@@ -616,7 +616,7 @@ public class Failable {
      *
      * <pre>{@code
      * final FileInputStream fis = new FileInputStream("my.file");
-     * Functions.tryWithResources(useInputStream(fis), null, () -> fis.close());
+     * Failable.tryWithResources(useInputStream(fis), null, () -> fis.close());
      * }</pre>
      *
      * @param action The action to execute. This object <em>will</em> always be invoked.
@@ -672,7 +672,7 @@ public class Failable {
      *
      * <pre>{@code
      * final FileInputStream fis = new FileInputStream("my.file");
-     * Functions.tryWithResources(useInputStream(fis), () -> fis.close());
+     * Failable.tryWithResources(useInputStream(fis), () -> fis.close());
      * }</pre>
      *
      * @param action The action to execute. This object <em>will</em> always be invoked.

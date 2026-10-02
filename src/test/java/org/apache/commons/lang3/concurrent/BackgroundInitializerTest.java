@@ -25,9 +25,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Duration;
+import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -35,9 +37,30 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.lang3.AbstractLangTest;
 import org.apache.commons.lang3.ThreadUtils;
+import org.easymock.EasyMock;
 import org.junit.jupiter.api.Test;
 
 class BackgroundInitializerTest extends AbstractLangTest {
+
+    @Test
+    void testIsInitializedPreservesInterrupt() throws Exception {
+        final ExecutorService executor = EasyMock.createMock(ExecutorService.class);
+        @SuppressWarnings("unchecked")
+        final Future<Object> future = EasyMock.createMock(Future.class);
+        EasyMock.expect(executor.submit(EasyMock.<Callable<Object>>anyObject())).andReturn(future);
+        EasyMock.expect(future.isDone()).andReturn(true);
+        EasyMock.expect(future.get()).andThrow(new InterruptedException("interrupted while checking result"));
+        EasyMock.replay(executor, future);
+        final BackgroundInitializer<Object> initializer = BackgroundInitializer.builder().setExternalExecutor(executor).get();
+        initializer.start();
+        try {
+            assertFalse(initializer.isInitialized());
+            assertTrue(Thread.currentThread().isInterrupted());
+        } finally {
+            Thread.interrupted();
+        }
+        EasyMock.verify(executor, future);
+    }
 
     /**
      * A concrete implementation of BackgroundInitializer. It also overloads

@@ -54,7 +54,7 @@ public interface FailableLongUnaryOperator<E extends Throwable> {
     }
 
     /**
-     * Returns a composed {@link FailableDoubleUnaryOperator} like {@link LongUnaryOperator#andThen(LongUnaryOperator)}.
+     * Returns a composed {@link FailableLongUnaryOperator} like {@link LongUnaryOperator#andThen(LongUnaryOperator)}.
      *
      * @param after The operator to apply after this one.
      * @return A composed {@link FailableLongUnaryOperator} like {@link LongUnaryOperator#andThen(LongUnaryOperator)}.

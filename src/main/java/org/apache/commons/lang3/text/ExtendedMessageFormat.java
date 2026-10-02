@@ -283,7 +283,7 @@ public class ExtendedMessageFormat extends MessageFormat {
      */
     private Format getFormat(final String desc) {
         if (registry != null) {
-            String name = desc;
+            String name = desc.trim();
             String args = null;
             final int i = desc.indexOf(START_FMT);
             if (i > 0) {

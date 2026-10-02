@@ -53,7 +53,7 @@ public class InheritanceUtils {
     /**
      * {@link InheritanceUtils} instances should NOT be constructed in standard programming.
      * Instead, the class should be used as
-     * {@code MethodUtils.getAccessibleMethod(method)}.
+     * {@code InheritanceUtils.distance(child, parent)}.
      *
      * <p>
      * This constructor is {@code public} to permit tools that require a JavaBean

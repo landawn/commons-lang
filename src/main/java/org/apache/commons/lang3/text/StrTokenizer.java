@@ -263,7 +263,7 @@ public class StrTokenizer implements ListIterator<String>, Cloneable {
      * Constructs a tokenizer splitting on space, tab, newline and formfeed
      * as per StringTokenizer.
      *
-     * @param input  The string which is to be parsed, not cloned.
+     * @param input  The character array to parse, copied by this constructor.
      */
     public StrTokenizer(final char[] input) {
         this.chars = ArrayUtils.clone(input);
@@ -272,7 +272,7 @@ public class StrTokenizer implements ListIterator<String>, Cloneable {
     /**
      * Constructs a tokenizer splitting on the specified character.
      *
-     * @param input  The string which is to be parsed, not cloned.
+     * @param input  The character array to parse, copied by this constructor.
      * @param delim The field delimiter character.
      */
     public StrTokenizer(final char[] input, final char delim) {
@@ -284,7 +284,7 @@ public class StrTokenizer implements ListIterator<String>, Cloneable {
      * Constructs a tokenizer splitting on the specified delimiter character
      * and handling quotes using the specified quote character.
      *
-     * @param input  The string which is to be parsed, not cloned.
+     * @param input  The character array to parse, copied by this constructor.
      * @param delim  The field delimiter character.
      * @param quote  The field quoted string character.
      */
@@ -296,7 +296,7 @@ public class StrTokenizer implements ListIterator<String>, Cloneable {
     /**
      * Constructs a tokenizer splitting on the specified string.
      *
-     * @param input  The string which is to be parsed, not cloned.
+     * @param input  The character array to parse, copied by this constructor.
      * @param delim The field delimiter string.
      */
     public StrTokenizer(final char[] input, final String delim) {
@@ -307,7 +307,7 @@ public class StrTokenizer implements ListIterator<String>, Cloneable {
     /**
      * Constructs a tokenizer splitting using the specified delimiter matcher.
      *
-     * @param input  The string which is to be parsed, not cloned.
+     * @param input  The character array to parse, copied by this constructor.
      * @param delim  The field delimiter matcher.
      */
     public StrTokenizer(final char[] input, final StrMatcher delim) {
@@ -319,7 +319,7 @@ public class StrTokenizer implements ListIterator<String>, Cloneable {
      * Constructs a tokenizer splitting using the specified delimiter matcher
      * and handling quotes using the specified quote matcher.
      *
-     * @param input  The string which is to be parsed, not cloned.
+     * @param input  The character array to parse, copied by this constructor.
      * @param delim  The field delimiter character.
      * @param quote  The field quoted string character.
      */
@@ -519,7 +519,7 @@ public class StrTokenizer implements ListIterator<String>, Cloneable {
      * <p>
      * The quote character is used to wrap data between the tokens.
      * This enables delimiters to be entered as data.
-     * The default value is '"' (double quote).
+     * The default is not to recognize quotes.
      * </p>
      *
      * @return The quote matcher in use.
@@ -866,7 +866,7 @@ public class StrTokenizer implements ListIterator<String>, Cloneable {
      * In this manner you can re-use a tokenizer with the same settings
      * on multiple input lines.
      *
-     * @param input  The new character array to tokenize, not cloned, null sets no text to parse.
+     * @param input  The new character array to tokenize, copied unless null, which sets no text to parse.
      * @return {@code this} instance.
      */
     public StrTokenizer reset(final char[] input) {
@@ -1078,20 +1078,21 @@ public class StrTokenizer implements ListIterator<String>, Cloneable {
      * @return The modifiable list of String tokens, unmodifiable if null array or zero count.
      */
     protected List<String> tokenize(final char[] srcChars, final int offset, final int count) {
-        if (ArrayUtils.isEmpty(srcChars)) {
+        if (ArrayUtils.isEmpty(srcChars) || count == 0) {
             return Collections.emptyList();
         }
         final StrBuilder buf = new StrBuilder();
         final List<String> tokenList = new ArrayList<>();
         int pos = offset;
+        final int end = offset + count;
 
         // loop around the entire buffer
-        while (pos >= 0 && pos < count) {
+        while (pos >= 0 && pos < end) {
             // find next token
-            pos = readNextToken(srcChars, pos, count, buf, tokenList);
+            pos = readNextToken(srcChars, pos, end, buf, tokenList);
 
             // handle case where end of string is a delimiter
-            if (pos >= count) {
+            if (pos >= end) {
                 addToken(tokenList, StringUtils.EMPTY);
             }
         }

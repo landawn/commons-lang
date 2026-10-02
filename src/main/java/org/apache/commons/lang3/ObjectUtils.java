@@ -507,7 +507,7 @@ public class ObjectUtils {
      *
      * @param v The short literal (as an int) value to return.
      * @throws IllegalArgumentException Thrown if the value passed to v is larger than a short, that is, smaller than -32768 or larger than 32767.
-     * @return The byte v, unchanged.
+     * @return The short v, unchanged.
      * @since 3.2
      */
     public static short CONST_SHORT(final int v) {
@@ -612,11 +612,11 @@ public class ObjectUtils {
      * returns null.
      *
      * <pre>{@code
-     * ObjectUtils.firstNonNullLazy(null, () -> null)                                  = null
-     * ObjectUtils.firstNonNullLazy(() -> null, () -> "")                              = ""
-     * ObjectUtils.firstNonNullLazy(() -> "", () -> throw new IllegalStateException()) = ""
-     * ObjectUtils.firstNonNullLazy(() -> null, () -> "zz)                             = "zz"
-     * ObjectUtils.firstNonNullLazy()                                                  = null
+     * ObjectUtils.getFirstNonNull(null, () -> null)                                         = null
+     * ObjectUtils.getFirstNonNull(() -> null, () -> "")                                     = ""
+     * ObjectUtils.getFirstNonNull(() -> "", () -> { throw new IllegalStateException(); })    = ""
+     * ObjectUtils.getFirstNonNull(() -> null, () -> "zz")                                   = "zz"
+     * ObjectUtils.getFirstNonNull()                                                        = null
      * }</pre>
      * <p>
      * See also {@link Consumers#accept(Consumer, Object)} and {@link Suppliers#get(Supplier)}.
@@ -744,7 +744,7 @@ public class ObjectUtils {
      * </pre>
      *
      * @param objects The objects to obtain the hash code of, may be {@code null}.
-     * @return The hash code of the objects, or zero if null.
+     * @return The hash code of the objects, or one if null.
      * @since 3.0
      * @deprecated Replaced by {@code java.util.Objects.hash(Object...)} in Java 7 and will be removed in future releases.
      */
@@ -1170,7 +1170,7 @@ public class ObjectUtils {
      *
      * <pre>
      * public Foo(Bar bar) {
-     *     this.bar = Objects.requireNonEmpty(bar);
+     *     this.bar = ObjectUtils.requireNonEmpty(bar);
      * }
      * </pre>
      *
@@ -1192,7 +1192,7 @@ public class ObjectUtils {
      *
      * <pre>
      * public Foo(Bar bar) {
-     *     this.bar = Objects.requireNonEmpty(bar, "bar");
+     *     this.bar = ObjectUtils.requireNonEmpty(bar, "bar");
      * }
      * </pre>
      *

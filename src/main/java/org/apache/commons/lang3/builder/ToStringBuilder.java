@@ -111,7 +111,7 @@ import org.apache.commons.lang3.builder.AbstractReflection.AbstractBuilder;
 public class ToStringBuilder extends AbstractReflection implements Builder<String> {
 
     /**
-     * Builds instances of CompareToBuilder.
+     * Builds instances of ToStringBuilder.
      *
      * @since 3.21.0
      */
@@ -596,7 +596,7 @@ public class ToStringBuilder extends AbstractReflection implements Builder<Strin
      * array.
      *
      * @param fieldName  The field name
-     * @param array  The array to add to the {@code hashCode}
+     * @param array  The array to add to the {@code toString}
      * @return {@code this} instance.
      */
     public ToStringBuilder append(final String fieldName, final boolean[] array) {

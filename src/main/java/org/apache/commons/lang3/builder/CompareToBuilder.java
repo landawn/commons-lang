@@ -65,7 +65,7 @@ import org.apache.commons.lang3.tuple.Pair;
  *   public int compareTo(Object o) {
  *     MyClass myClass = (MyClass) o;
  *     return new CompareToBuilder()
- *       .appendSuper(super.compareTo(o)
+ *       .appendSuper(super.compareTo(o))
  *       .append(this.field1, myClass.field1)
  *       .append(this.field2, myClass.field2)
  *       .append(this.field3, myClass.field3)

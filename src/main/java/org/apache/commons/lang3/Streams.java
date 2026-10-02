@@ -56,7 +56,7 @@ import org.apache.commons.lang3.Functions.FailablePredicate;
  * Using a {@link FailableStream}, this can be rewritten as follows:
  * </p>
  * <pre>{@code
- *     Streams.failable(stream).forEach(m -> m.invoke(o, args));
+ *     Streams.stream(stream).forEach(m -> m.invoke(o, args));
  * }</pre>
  * <p>
  * Obviously, the second version is much more concise and the spirit of
@@ -221,7 +221,7 @@ public class Streams {
          * </p>
          *
          * <p>
-         * This is an intermediate operation.
+         * This is a terminal operation.
          * </p>
          *
          * <p>
@@ -287,7 +287,7 @@ public class Streams {
          * </p>
          *
          * <p>
-         * This is an intermediate operation.
+         * This is a terminal operation.
          * </p>
          *
          * <p>
@@ -349,7 +349,7 @@ public class Streams {
          * Performs an action for each element of this stream.
          *
          * <p>
-         * This is an intermediate operation.
+         * This is a terminal operation.
          * </p>
          *
          * <p>
@@ -417,7 +417,7 @@ public class Streams {
          * </p>
          *
          * <p>
-         * This is an intermediate operation.
+         * This is a terminal operation.
          * </p>
          *
          * Note Sum, min, max, average, and string concatenation are all special

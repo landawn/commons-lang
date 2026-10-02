@@ -54,7 +54,7 @@ public interface FailableIntUnaryOperator<E extends Throwable> {
     }
 
     /**
-     * Returns a composed {@link FailableDoubleUnaryOperator} like {@link IntUnaryOperator#andThen(IntUnaryOperator)}.
+     * Returns a composed {@link FailableIntUnaryOperator} like {@link IntUnaryOperator#andThen(IntUnaryOperator)}.
      *
      * @param after The operator to apply after this one.
      * @return A composed {@link FailableIntUnaryOperator} like {@link IntUnaryOperator#andThen(IntUnaryOperator)}.

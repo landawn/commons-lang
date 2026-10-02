@@ -30,6 +30,22 @@ import org.junit.jupiter.api.Test;
  */
 class ArrayUtilsRemoveMultipleTest extends AbstractLangTest {
 
+    @Test
+    void testRemoveAllNullIndicesPreservesContents() {
+        assertArrayEquals(new boolean[] {true, false}, ArrayUtils.removeAll(new boolean[] {true, false}, (int[]) null));
+        assertArrayEquals(new byte[] {1, 2}, ArrayUtils.removeAll(new byte[] {1, 2}, (int[]) null));
+        assertArrayEquals(new char[] {'a', 'b'}, ArrayUtils.removeAll(new char[] {'a', 'b'}, (int[]) null));
+        assertArrayEquals(new double[] {1, 2}, ArrayUtils.removeAll(new double[] {1, 2}, (int[]) null));
+        assertArrayEquals(new float[] {1, 2}, ArrayUtils.removeAll(new float[] {1, 2}, (int[]) null));
+        assertArrayEquals(new int[] {1, 2}, ArrayUtils.removeAll(new int[] {1, 2}, (int[]) null));
+        assertArrayEquals(new long[] {1, 2}, ArrayUtils.removeAll(new long[] {1, 2}, (int[]) null));
+        assertArrayEquals(new short[] {1, 2}, ArrayUtils.removeAll(new short[] {1, 2}, (int[]) null));
+        final String[] input = {"a", "b"};
+        final String[] result = ArrayUtils.removeAll(input, (int[]) null);
+        assertArrayEquals(input, result);
+        assertNotSame(input, result);
+    }
+
     private static final int[] NULL_INDICES = null;
 
     @Test

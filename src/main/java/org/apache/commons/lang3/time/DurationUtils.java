@@ -68,7 +68,7 @@ public class DurationUtils {
      * @param key  The property name.
      * @param unit The unit that the duration is measured in, not null.
      * @param def  The default value in the given unit.
-     * @return A Duration of seconds.
+     * @return A Duration in the given unit.
      * @since 3.19.0
      */
     public static Duration get(final String key, final TemporalUnit unit, final long def) {
@@ -98,7 +98,7 @@ public class DurationUtils {
      * {@link Object#wait(long, int)} and {@link Thread#sleep(long, int)}.
      * </p>
      * <p>
-     * Note that is this different from {@link Duration#getNano()} because a duration are seconds and nanoseconds.
+     * This differs from {@link Duration#getNano()}, which returns the nanosecond part of a second.
      * </p>
      *
      * @param duration The duration to query.
@@ -117,7 +117,7 @@ public class DurationUtils {
      * {@link Object#wait(long, int)} and {@link Thread#sleep(long, int)}.
      * </p>
      * <p>
-     * Note that is this different from {@link Duration#getNano()} because a duration are seconds and nanoseconds.
+     * This differs from {@link Duration#getNano()}, which returns the nanosecond part of a second.
      * </p>
      *
      * @param duration The duration to query.

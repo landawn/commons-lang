@@ -21,6 +21,10 @@ import java.util.function.DoubleToLongFunction;
 
 /**
  * A functional interface like {@link DoubleToLongFunction} that declares a {@link Throwable}.
+ * <p>
+ * The historical {@link #applyAsLong(double)} signature returns {@code int}, despite its name. This signature is retained
+ * for binary compatibility; use {@code FailableDoubleFunction<Long, E>} when a full {@code long} result is required.
+ * </p>
  *
  * @param <E> The kind of thrown exception or error.
  * @since 3.11
@@ -47,7 +51,7 @@ public interface FailableDoubleToLongFunction<E extends Throwable> {
      * Applies this function to the given argument.
      *
      * @param value The function argument
-     * @return The function result
+     * @return The function result as an {@code int}.
      * @throws E Thrown if the operation fails.
      */
     int applyAsLong(double value) throws E;

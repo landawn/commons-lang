@@ -71,11 +71,11 @@ import java.util.concurrent.atomic.AtomicReference;
  * again when things calm down. The following code fragment shows a typical example of
  * such a scenario. Here the {@link EventCountCircuitBreaker} allows up to 1000 requests
  * per minute before it interferes. When the load goes down again to 800 requests per
- * second it switches back to state <em>closed</em>:
+ * minute it switches back to state <em>closed</em>:
  * </p>
  *
  * <pre>
- * EventCountCircuitBreaker breaker = new EventCountCircuitBreaker(1000, 1, TimeUnit.MINUTE, 800);
+ * EventCountCircuitBreaker breaker = new EventCountCircuitBreaker(1000, 1, TimeUnit.MINUTES, 800);
  * ...
  * public void handleRequest(Request request) {
  *     if (breaker.incrementAndCheckState()) {
@@ -92,12 +92,12 @@ import java.util.concurrent.atomic.AtomicReference;
  * In this scenario, an application uses an external service which may fail from time to
  * time. If there are too many errors, the service is considered down and should not be
  * called for a while. This can be achieved using the following pattern - in this concrete
- * example we accept up to 5 errors in 2 minutes; if this limit is reached, the service is
+ * example we accept up to 5 errors in 2 minutes; if this limit is exceeded, the service is
  * given a rest time of 10 minutes:
  * </p>
  *
  * <pre>
- * EventCountCircuitBreaker breaker = new EventCountCircuitBreaker(5, 2, TimeUnit.MINUTE, 5, 10, TimeUnit.MINUTE);
+ * EventCountCircuitBreaker breaker = new EventCountCircuitBreaker(5, 2, TimeUnit.MINUTES, 5, 10, TimeUnit.MINUTES);
  * ...
  * public void handleRequest(Request request) {
  *     if (breaker.checkState()) {
@@ -189,7 +189,7 @@ public class EventCountCircuitBreaker extends AbstractCircuitBreaker<Integer> {
     private static final class CheckIntervalData {
 
         /** The counter for events. */
-        private final int eventCount;
+        private final long eventCount;
 
         /** The start time of the current check interval. */
         private final long checkIntervalStart;
@@ -200,7 +200,7 @@ public class EventCountCircuitBreaker extends AbstractCircuitBreaker<Integer> {
          * @param count The current count value
          * @param intervalStart The start time of the check interval
          */
-        CheckIntervalData(final int count, final long intervalStart) {
+        CheckIntervalData(final long count, final long intervalStart) {
             eventCount = count;
             checkIntervalStart = intervalStart;
         }
@@ -219,7 +219,7 @@ public class EventCountCircuitBreaker extends AbstractCircuitBreaker<Integer> {
          *
          * @return The number of received events
          */
-        public int getEventCount() {
+        public long getEventCount() {
             return eventCount;
         }
 
@@ -231,7 +231,8 @@ public class EventCountCircuitBreaker extends AbstractCircuitBreaker<Integer> {
          * @return The updated instance
          */
         public CheckIntervalData increment(final int delta) {
-            return delta == 0 ? this : new CheckIntervalData(getEventCount() + delta,
+            // Counts above every possible threshold are equivalent; cap them without wrapping negative.
+            return delta == 0 ? this : new CheckIntervalData(Math.min((long) Integer.MAX_VALUE + 1, getEventCount() + delta),
                     getCheckIntervalStart());
         }
     }
@@ -344,7 +345,7 @@ public class EventCountCircuitBreaker extends AbstractCircuitBreaker<Integer> {
      * Creates a new instance of {@link EventCountCircuitBreaker} with the same interval for opening
      * and closing checks.
      *
-     * @param openingThreshold The threshold for opening the circuit breaker; if this
+     * @param openingThreshold The threshold for opening the circuit breaker; if more than this
      * number of events is received in the time span determined by the check interval, the
      * circuit breaker is opened
      * @param checkInterval The check interval for opening or closing the circuit breaker
@@ -364,7 +365,7 @@ public class EventCountCircuitBreaker extends AbstractCircuitBreaker<Integer> {
      * opening and closing it based on threshold values for events occurring in specific
      * intervals.
      *
-     * @param openingThreshold The threshold for opening the circuit breaker; if this
+     * @param openingThreshold The threshold for opening the circuit breaker; if more than this
      * number of events is received in the time span determined by the opening interval,
      * the circuit breaker is opened
      * @param openingInterval The interval for opening the circuit breaker
@@ -427,7 +428,7 @@ public class EventCountCircuitBreaker extends AbstractCircuitBreaker<Integer> {
     /**
      * Gets the interval (in nanoseconds) for checking for the closing threshold.
      *
-     * @return The opening check interval
+     * @return The closing check interval in nanoseconds.
      */
     public long getClosingInterval() {
         return closingInterval;
@@ -454,7 +455,7 @@ public class EventCountCircuitBreaker extends AbstractCircuitBreaker<Integer> {
     }
 
     /**
-     * Gets the threshold value for opening the circuit breaker. If this number of
+     * Gets the threshold value for opening the circuit breaker. If more than this number of
      * events is received in the time span determined by the opening interval, the circuit
      * breaker is opened.
      *
@@ -481,7 +482,8 @@ public class EventCountCircuitBreaker extends AbstractCircuitBreaker<Integer> {
      *
      * <p>
      * The event count is a protective counter and only moves toward the opening threshold:
-     * negative increments are rejected.
+     * negative increments are rejected. Counts above {@link Integer#MAX_VALUE} are retained as a value greater than every possible threshold,
+     * so overflowing an {@code int} cannot prevent opening or cause premature closing.
      * </p>
      *
      * @throws IllegalArgumentException Thrown if the increment is negative.

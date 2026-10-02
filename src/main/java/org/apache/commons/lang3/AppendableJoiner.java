@@ -45,8 +45,7 @@ import org.apache.commons.lang3.function.FailableBiConsumer;
  *     .setSuffix("]")
  *     .setDelimiter(", ")
  *     .get();
- * }
- * ...
+ *
  * // Builds straight into a StringBuilder:
  * StringBuilder sbuilder = new StringBuilder("1");
  * JOINER.join(sbuilder, "A", "B");
@@ -61,16 +60,17 @@ import org.apache.commons.lang3.function.FailableBiConsumer;
  * </p>
  *
  * <pre>{@code
- * private static final AppendableJoiner<Item> JOINER = AppendableJoiner.builder()
- *     .setElementAppender(e -> (a, e) -> a.append(e.getFoo())
- *                                        a.append(e.getBar())
- *                                        a.append('!'))
- *     ...
+ * private static final AppendableJoiner<Item> JOINER = AppendableJoiner.<Item>builder()
+ *     .setElementAppender((a, e) -> {
+ *         a.append(e.getFoo());
+ *         a.append(e.getBar());
+ *         a.append('!');
+ *     })
  *     .get();
- * }
  * }</pre>
  * <p>
- * This class is immutable and thread-safe.
+ * Instances retain the supplied prefix, suffix, delimiter, and element appender. An instance is thread-safe if these supplied objects are thread-safe;
+ * callers must also coordinate access to a shared target {@link Appendable}.
  * </p>
  *
  * @param <T> The type of elements to join.
@@ -202,7 +202,7 @@ public final class AppendableJoiner<T> {
         try {
             return joinIterable(stringBuilder, prefix, suffix, delimiter, appender, elements);
         } catch (final IOException e) {
-            // Cannot happen with a StringBuilder.
+            // A custom element appender can throw even when the target is a StringBuilder.
             throw new UncheckedException(e);
         }
     }
@@ -231,7 +231,7 @@ public final class AppendableJoiner<T> {
         try {
             return joinArray(stringBuilder, prefix, suffix, delimiter, appender, elements);
         } catch (final IOException e) {
-            // Cannot happen with a StringBuilder.
+            // A custom element appender can throw even when the target is a StringBuilder.
             throw new UncheckedException(e);
         }
     }
@@ -290,7 +290,7 @@ public final class AppendableJoiner<T> {
      * @param <A>        the Appendable type.
      * @param appendable The target.
      * @param elements   The source.
-     * @return The given StringBuilder.
+     * @return The given Appendable.
      * @throws IOException Thrown if an I/O error occurs.
      */
     public <A extends Appendable> A joinA(final A appendable, final Iterable<T> elements) throws IOException {
@@ -303,7 +303,7 @@ public final class AppendableJoiner<T> {
      * @param <A>        the Appendable type.
      * @param appendable The target.
      * @param elements   The source.
-     * @return The given StringBuilder.
+     * @return The given Appendable.
      * @throws IOException Thrown if an I/O error occurs.
      */
     public <A extends Appendable> A joinA(final A appendable, @SuppressWarnings("unchecked") final T... elements) throws IOException {

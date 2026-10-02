@@ -45,6 +45,21 @@ import org.junit.jupiter.api.Test;
 @Deprecated
 class StrBuilderTest extends AbstractLangTest {
 
+    @Test
+    void testReaderSkipLongMaxValueAfterReading() throws IOException {
+        try (Reader reader = new StrBuilder("abc").asReader()) {
+            assertEquals('a', reader.read());
+            assertEquals(2, reader.skip(Long.MAX_VALUE));
+            assertEquals(-1, reader.read());
+        }
+    }
+
+    @Test
+    void testEqualsIgnoreCaseNull() {
+        assertFalse(new StrBuilder().equalsIgnoreCase(null));
+        assertFalse(new StrBuilder("abc").equalsIgnoreCase(null));
+    }
+
     private static final class MockReadable implements Readable {
 
         private final CharBuffer src;

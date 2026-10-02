@@ -160,7 +160,7 @@ public class FastDateFormat extends Format implements DateParser, DatePrinter {
     /**
      * Gets a date formatter instance using the specified style and locale in the default time zone.
      *
-     * @param style  date style: {@link #FULL}, LO{@link #FULL},{@link #MEDIUM}, or {@link #SHORT}.
+     * @param style  date style: {@link #FULL}, {@link #LONG}, {@link #MEDIUM}, or {@link #SHORT}.
      * @param locale optional locale, overrides system locale.
      * @return A localized standard date formatter.
      * @throws IllegalArgumentException Thrown if the Locale has no date pattern defined.
@@ -451,7 +451,7 @@ public class FastDateFormat extends Format implements DateParser, DatePrinter {
      * @param calendar The calendar to format.
      * @param buf      The buffer to format into.
      * @return The specified string buffer.
-     * @deprecated Use {{@link #format(Calendar, Appendable)}.
+     * @deprecated Use {@link #format(Calendar, Appendable)}.
      */
     @Deprecated
     @Override
@@ -489,7 +489,7 @@ public class FastDateFormat extends Format implements DateParser, DatePrinter {
      * @param date The date to format.
      * @param buf  The buffer to format into.
      * @return The specified string buffer.
-     * @deprecated Use {{@link #format(Date, Appendable)}.
+     * @deprecated Use {@link #format(Date, Appendable)}.
      */
     @Deprecated
     @Override
@@ -529,7 +529,7 @@ public class FastDateFormat extends Format implements DateParser, DatePrinter {
      * @param buf    The buffer to format into.
      * @return The specified string buffer.
      * @since 2.1
-     * @deprecated Use {{@link #format(long, Appendable)}.
+     * @deprecated Use {@link #format(long, Appendable)}.
      */
     @Deprecated
     @Override

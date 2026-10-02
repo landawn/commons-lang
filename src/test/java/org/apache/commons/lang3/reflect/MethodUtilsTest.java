@@ -70,6 +70,44 @@ import org.junit.jupiter.params.provider.ValueSource;
  */
 class MethodUtilsTest extends AbstractLangTest {
 
+    public static class VarArgsBean {
+        public Object[] objects(final Object... values) {
+            return values;
+        }
+
+        public String[] required(final String first, final String second, final String... values) {
+            return values;
+        }
+
+        public Integer[] wrappers(final Integer... values) {
+            return values;
+        }
+    }
+
+    @Test
+    void testInvokeVarArgsCovariantArray() throws Exception {
+        final String[] values = { "one", "two" };
+        assertSame(values, MethodUtils.invokeMethod(new VarArgsBean(), "objects", (Object) values));
+        assertSame(values, MethodUtils.invokeMethod(new VarArgsBean(), "objects", new Object[] { values },
+                new Class<?>[] { Object[].class }));
+    }
+
+    @Test
+    void testInvokeVarArgsNullableWrappers() throws Exception {
+        final Integer value = Integer.valueOf(1000);
+        final Integer[] result = (Integer[]) MethodUtils.invokeMethod(new VarArgsBean(), "wrappers", value, null, 2);
+        assertArrayEquals(new Integer[] { value, null, 2 }, result);
+        assertSame(value, result[0]);
+    }
+
+    @Test
+    void testVarArgsRequireFixedArguments() {
+        assertNull(MethodUtils.getMatchingAccessibleMethod(VarArgsBean.class, "required"));
+        assertNull(MethodUtils.getMatchingAccessibleMethod(VarArgsBean.class, "required", String.class));
+        assertThrows(NoSuchMethodException.class, () -> MethodUtils.invokeMethod(new VarArgsBean(), "required"));
+        assertThrows(NoSuchMethodException.class, () -> MethodUtils.invokeMethod(new VarArgsBean(), "required", "one"));
+    }
+
     protected abstract static class AbstractGetMatchingMethod implements InterfaceGetMatchingMethod {
         public abstract void testMethod5(Exception exception);
     }

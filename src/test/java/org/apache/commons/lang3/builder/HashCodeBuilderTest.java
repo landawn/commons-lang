@@ -31,6 +31,16 @@ import org.junit.jupiter.api.Test;
  */
 class HashCodeBuilderTest extends AbstractLangTest {
 
+    @Test
+    void testBuilderDefaults() {
+        assertEquals(new HashCodeBuilder().append(42).append("value").toHashCode(),
+                HashCodeBuilder.builder().get().append(42).append("value").toHashCode());
+        assertEquals(new HashCodeBuilder(19, 37).append(42).toHashCode(),
+                HashCodeBuilder.builder().setInitialOddNumber(19).get().append(42).toHashCode());
+        assertEquals(new HashCodeBuilder(17, 41).append(42).toHashCode(),
+                HashCodeBuilder.builder().setMultiplierOddNumber(41).get().append(42).toHashCode());
+    }
+
     /**
      * Holds a {@link ReflectionHashCodeMember} and is itself reflection hashed.
      */

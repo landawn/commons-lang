@@ -284,6 +284,22 @@ class StopWatchTest extends AbstractLangTest {
         assertEquals(0, watch.getStopTime());
     }
 
+    @Test
+    void testResetClearsStopInstant() {
+        final StopWatch watch = StopWatch.createStarted();
+        watch.stop();
+        assertNotNull(watch.getStopInstant());
+        watch.reset();
+        watch.start();
+        assertNull(watch.getStopInstant());
+        assertEquals(0, watch.getStopTime());
+        watch.split();
+        assertNotNull(watch.getStopInstant());
+        watch.reset();
+        watch.start();
+        assertNull(watch.getStopInstant());
+    }
+
     @RepeatedTest(10)
     void testGetTime() throws InterruptedException {
         final StopWatch watch = new StopWatch();

@@ -168,7 +168,7 @@ public class SerializationUtils {
      * Deserializes an {@link Object} from the specified stream.
      *
      * <p>
-     * The stream will be closed once the object is written. This avoids the need for a finally clause, and maybe also exception handling, in the application
+     * The stream will be closed once the object is read. This avoids the need for a finally clause, and maybe also exception handling, in the application
      * code.
      * </p>
      *

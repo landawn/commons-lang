@@ -20,6 +20,7 @@ import static org.apache.commons.lang3.LangAssertions.assertNullPointerException
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -39,6 +40,39 @@ import org.junit.jupiter.api.Test;
  * Test class for {@link MultiBackgroundInitializer}.
  */
 class MultiBackgroundInitializerTest extends AbstractLangTest {
+
+    @Test
+    void testClosePreservesNestedFailures() {
+        final Exception failure = new Exception("cleanup failed");
+        final MultiBackgroundInitializer nested = new MultiBackgroundInitializer();
+        nested.addInitializer("failing", new BackgroundInitializer<Object>() {
+            @Override
+            public void close() throws ConcurrentException {
+                throw new ConcurrentException(failure);
+            }
+        });
+        final MultiBackgroundInitializer parent = new MultiBackgroundInitializer();
+        parent.addInitializer("nested", nested);
+        final ConcurrentException exception = assertThrows(ConcurrentException.class, parent::close);
+        assertEquals(1, exception.getSuppressed().length);
+        assertEquals(1, exception.getSuppressed()[0].getSuppressed().length);
+        assertSame(failure, exception.getSuppressed()[0].getSuppressed()[0]);
+    }
+
+    @Test
+    void testClosePreservesFailureWithoutCause() {
+        final ConcurrentException failure = new ConcurrentException("cleanup failed");
+        final MultiBackgroundInitializer parent = new MultiBackgroundInitializer();
+        parent.addInitializer("failing", new BackgroundInitializer<Object>() {
+            @Override
+            public void close() throws ConcurrentException {
+                throw failure;
+            }
+        });
+        final ConcurrentException exception = assertThrows(ConcurrentException.class, parent::close);
+        assertEquals(1, exception.getSuppressed().length);
+        assertSame(failure, exception.getSuppressed()[0]);
+    }
 
     /**
      * A mostly complete implementation of {@code BackgroundInitializer} used for

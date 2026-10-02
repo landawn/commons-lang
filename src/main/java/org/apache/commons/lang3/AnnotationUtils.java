@@ -286,7 +286,7 @@ public class AnnotationUtils {
      * <p>
      * The Java language specification only permits certain types to be used
      * in annotations. These include {@link String}, {@link Class}, primitive
-     * types, {@link Annotation}, {@link Enum}, and single-dimensional arrays of
+     * types other than {@code void}, annotation types, enum types, and single-dimensional arrays of
      * these types.
      * </p>
      *
@@ -300,7 +300,7 @@ public class AnnotationUtils {
         if (type.isArray()) {
             type = type.getComponentType();
         }
-        return type.isPrimitive() || type.isEnum() || type.isAnnotation()
+        return type.isPrimitive() && type != Void.TYPE || type.isEnum() || type.isAnnotation()
                 || String.class.equals(type) || Class.class.equals(type);
     }
 

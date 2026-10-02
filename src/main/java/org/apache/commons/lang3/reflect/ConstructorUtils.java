@@ -100,7 +100,7 @@ public class ConstructorUtils {
      * </p>
      * <p>
      * First it checks if there is a constructor matching the exact signature. If not then all the constructors of the class are checked to see if their
-     * signatures are assignment-compatible with the parameter types. The first assignment-compatible matching constructor is returned.
+     * signatures are assignment-compatible with the parameter types. The best matching accessible constructor is returned.
      * </p>
      *
      * @param <T>            the constructor type.

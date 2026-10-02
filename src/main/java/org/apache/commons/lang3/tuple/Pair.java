@@ -136,9 +136,9 @@ public abstract class Pair<L, R> implements Map.Entry<L, R>, Comparable<Pair<L, 
      *
      * @param <V> The function return type.
      * @param <E> The kind of thrown exception or error.
-     * @param function The consumer to call.
+     * @param function The function to call.
      * @return The function's return value.
-     * @throws E Thrown when the consumer fails.
+     * @throws E Thrown when the function fails.
      * @since 3.13.0
      */
     public <V, E extends Throwable> V apply(final FailableBiFunction<L, R, V, E> function) throws E {
@@ -261,7 +261,7 @@ public abstract class Pair<L, R> implements Map.Entry<L, R>, Comparable<Pair<L, 
      * Formats the receiver using the given format.
      *
      * <p>
-     * This uses {@link String#format(String, Object...)} to the format. Two variables may be used to embed the left and right elements. Use {@code %1$s} for
+     * This uses {@link String#format(String, Object...)} to format the pair. Two variables may be used to embed the left and right elements. Use {@code %1$s} for
      * the left element (key) and {@code %2$s} for the right element (value).
      * </p>
      *

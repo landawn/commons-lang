@@ -29,6 +29,7 @@ import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -50,6 +51,28 @@ import org.xml.sax.SAXException;
  * Tests {@link Streams}.
  */
 class StreamsTest extends AbstractLangTest {
+
+    @Test
+    void testEmptyEnumerationRejectsNullActions() {
+        try (Stream<Object> stream = Streams.of(Collections.enumeration(Collections.emptyList()))) {
+            assertThrows(NullPointerException.class, () -> stream.spliterator().tryAdvance(null));
+        }
+        try (Stream<Object> stream = Streams.of(Collections.enumeration(Collections.emptyList()))) {
+            assertThrows(NullPointerException.class, () -> stream.spliterator().forEachRemaining(null));
+        }
+    }
+
+    @Test
+    void testEnumerationRejectsNullActionWithoutConsumingElement() {
+        try (Stream<String> stream = Streams.of(Collections.enumeration(Arrays.asList("first", "second")))) {
+            final java.util.Spliterator<String> spliterator = stream.spliterator();
+            assertThrows(NullPointerException.class, () -> spliterator.tryAdvance(null));
+            assertThrows(NullPointerException.class, () -> spliterator.forEachRemaining(null));
+            final List<String> values = new ArrayList<>();
+            spliterator.forEachRemaining(values::add);
+            assertEquals(Arrays.asList("first", "second"), values);
+        }
+    }
 
     protected <T extends Throwable> FailableConsumer<String, T> asIntConsumer(final T throwable) {
         return s -> {

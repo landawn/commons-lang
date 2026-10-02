@@ -276,7 +276,7 @@ public class StringUtils {
      * </pre>
      *
      * @param str      The String to check, may be null.
-     * @param offset   left edge of source String.
+     * @param offset   left edge of source String; negative values are treated as zero.
      * @param maxWidth maximum length of result String, must be at least 4.
      * @return abbreviated String, {@code null} if null String input.
      * @throws IllegalArgumentException Thrown if the width is too small.
@@ -302,7 +302,7 @@ public class StringUtils {
      *
      * <pre>
      * StringUtils.abbreviate(null, "...", *)      = null
-     * StringUtils.abbreviate("abcdefg", null, *)  = "abcdefg"
+     * StringUtils.abbreviate("abcdefg", null, 4)  = "abcd"
      * StringUtils.abbreviate("", "...", 4)        = ""
      * StringUtils.abbreviate("abcdefg", ".", 5)   = "abcd."
      * StringUtils.abbreviate("abcdefg", ".", 7)   = "abcdefg"
@@ -314,7 +314,7 @@ public class StringUtils {
      * </pre>
      *
      * @param str          The String to check, may be null.
-     * @param abbrevMarker The String used as replacement marker.
+     * @param abbrevMarker The String used as replacement marker, null treated as empty.
      * @param maxWidth     maximum length of result String, must be at least {@code abbrevMarker.length + 1}.
      * @return abbreviated String, {@code null} if null String input.
      * @throws IllegalArgumentException Thrown if the width is too small.
@@ -337,7 +337,7 @@ public class StringUtils {
      *
      * <pre>
      * StringUtils.abbreviate(null, null, *, *)                 = null
-     * StringUtils.abbreviate("abcdefghijklmno", null, *, *)    = "abcdefghijklmno"
+     * StringUtils.abbreviate("abcdefghijklmno", null, 0, 10)   = "abcdefghij"
      * StringUtils.abbreviate("", "...", 0, 4)                  = ""
      * StringUtils.abbreviate("abcdefghijklmno", "---", -1, 10) = "abcdefg---"
      * StringUtils.abbreviate("abcdefghijklmno", ",", 0, 10)    = "abcdefghi,"
@@ -355,8 +355,8 @@ public class StringUtils {
      *
      * @param str          The String to check, may be null.
      * @param abbrevMarker The String used as replacement marker, for example "...", or Unicode HORIZONTAL ELLIPSIS, U+2026 '…'.
-     * @param offset       left edge of source String.
-     * @param maxWidth     maximum length of result String, must be at least 4.
+     * @param offset       left edge of source String; negative values are treated as zero.
+     * @param maxWidth     maximum length of result String, must exceed the marker length (at least 1 for a null or empty marker).
      * @return abbreviated String, {@code null} if null String input.
      * @throws IllegalArgumentException Thrown if the width is too small.
      * @since 3.6
@@ -379,7 +379,8 @@ public class StringUtils {
         if (strLen <= maxWidth) {
             return str;
         }
-        if (strLen - offset <= maxWidth - abbrevMarkerLength) {
+        // Widen before subtraction so a very negative offset cannot overflow into the tail window.
+        if (strLen - (long) offset <= maxWidth - abbrevMarkerLength) {
             int tailStart = strLen - (maxWidth - abbrevMarkerLength);
             if (splitsSurrogatePair(str, tailStart)) {
                 tailStart++;
@@ -665,9 +666,8 @@ public class StringUtils {
      *
      * @param str    The String to center, may be null.
      * @param size   The int size of new String, negative treated as zero.
-     * @param padStr The String to pad the new String with, must not be null or empty.
+     * @param padStr The String to pad the new String with, null or empty treated as a space.
      * @return centered String, {@code null} if null String input.
-     * @throws IllegalArgumentException Thrown if padStr is {@code null} or empty.
      */
     public static String center(String str, final int size, String padStr) {
         if (str == null || size <= 0) {
@@ -1088,7 +1088,7 @@ public class StringUtils {
      * StringUtils.containsAny("zzabyycdxx", 'z', 'a')   = true
      * StringUtils.containsAny("zzabyycdxx", 'b', 'y')   = true
      * StringUtils.containsAny("zzabyycdxx", 'z', 'y')   = true
-     * StringUtils.containsAny("aba", 'z])               = false
+     * StringUtils.containsAny("aba", 'z')               = false
      * </pre>
      *
      * @param cs          The CharSequence to check, may be null.
@@ -1779,8 +1779,8 @@ public class StringUtils {
      *
      * @param sequence      The CharSequence to check, may be null.
      * @param searchStrings The case-sensitive CharSequences to find, may be empty or contain {@code null}.
-     * @return {@code true} if the input {@code sequence} is {@code null} AND no {@code searchStrings} are provided, or the input {@code sequence} ends in any
-     *         of the provided case-sensitive {@code searchStrings}.
+     * @return {@code true} if the input {@code sequence} ends in any of the provided case-sensitive {@code searchStrings};
+     *         {@code false} for a null input sequence or a null or empty search array.
      * @see StringUtils#endsWith(CharSequence, CharSequence)
      * @since 3.0
      * @deprecated Use {@link Strings#endsWithAny(CharSequence, CharSequence...) Strings.CS.endsWithAny(CharSequence, CharSequence...)}.
@@ -4699,12 +4699,15 @@ public class StringUtils {
      * @param endIndex   The index to stop joining from (exclusive).
      * @return The joined String, {@code null} if null array input; or the empty string if {@code endIndex - startIndex <= 0}. The number of joined entries is
      *         given by {@code endIndex - startIndex}.
-     * @throws ArrayIndexOutOfBoundsException Thrown if<br> {@code startIndex < 0} or <br> {@code startIndex >= array.length()} or <br> {@code endIndex < 0} or
-     *         <br> {@code endIndex > array.length()}.
+     * @throws ArrayIndexOutOfBoundsException Thrown if {@code startIndex < 0} or {@code endIndex > array.length}.
      */
     public static String join(final Object[] array, final String delimiter, final int startIndex, final int endIndex) {
-        return array != null ? Streams.of(array).skip(startIndex).limit(Math.max(0, endIndex - startIndex))
-                .collect(LangCollectors.joining(delimiter, EMPTY, EMPTY, ObjectUtils::toString)) : null;
+        if (array == null) {
+            return null;
+        }
+        checkFromToIndex(startIndex, endIndex, array.length);
+        return Streams.of(array).skip(startIndex).limit(Math.max(0L, (long) endIndex - startIndex))
+                .collect(LangCollectors.joining(delimiter, EMPTY, EMPTY, ObjectUtils::toString));
     }
 
     /**
@@ -4893,7 +4896,7 @@ public class StringUtils {
      *
      * @param seq       The CharSequence to check, may be null.
      * @param searchSeq The CharSequence to find, may be null.
-     * @param startPos  The start position, negative treated as zero.
+     * @param startPos  The start position, negative returns -1.
      * @return The last index of the search CharSequence (always &le; startPos), -1 if no match or {@code null} string input.
      * @since 2.0
      * @since 3.0 Changed signature from lastIndexOf(String, String, int) to lastIndexOf(CharSequence, CharSequence, int)
@@ -5001,9 +5004,9 @@ public class StringUtils {
      * Finds the latest index of any substring in a set of potential substrings.
      *
      * <p>
-     * A {@code null} CharSequence will return {@code -1}. A {@code null} search array will return {@code -1}. A {@code null} or zero length search array entry
+     * A {@code null} CharSequence will return {@code -1}. A {@code null} search array will return {@code -1}. A {@code null} search array entry
      * will be ignored, but a search array containing "" will return the length of {@code str} if {@code str} is not null. This method uses
-     * {@link String#indexOf(String)} if possible
+     * {@link String#lastIndexOf(String)} if possible.
      * </p>
      *
      * <pre>
@@ -5059,7 +5062,7 @@ public class StringUtils {
      *
      * @param str       The CharSequence to check, may be null.
      * @param searchStr The CharSequence to find, may be null.
-     * @return The first index of the search CharSequence, -1 if no match or {@code null} string input.
+     * @return The last index of the search CharSequence, -1 if no match or {@code null} string input.
      * @since 2.5
      * @since 3.0 Changed signature from lastIndexOfIgnoreCase(String, String) to lastIndexOfIgnoreCase(CharSequence, CharSequence)
      * @deprecated Use {@link Strings#lastIndexOf(CharSequence, CharSequence) Strings.CI.lastIndexOf(CharSequence, CharSequence)}.
@@ -5351,7 +5354,7 @@ public class StringUtils {
      * </pre>
      *
      * @param str    The String to lower case, may be null.
-     * @param locale The locale that defines the case transformation rules, must not be null.
+     * @param locale The locale that defines the case transformation rules, null uses the default locale.
      * @return The lower cased String, {@code null} if null String input.
      * @since 2.5
      */
@@ -5422,7 +5425,7 @@ public class StringUtils {
      *
      * <p>
      * If {@code len} characters are not available, the remainder of the String will be returned without an exception. If the String is {@code null},
-     * {@code null} will be returned. An empty String is returned if len is negative or exceeds the length of {@code str}.
+     * {@code null} will be returned. An empty String is returned if {@code len} is negative or {@code pos} exceeds the length of {@code str}.
      * </p>
      *
      * <pre>
@@ -5796,7 +5799,7 @@ public class StringUtils {
      * </pre>
      *
      * @param str    The source String to search, may be null.
-     * @param remove The char to search for and remove, may be null.
+     * @param remove The char to search for and remove.
      * @return The substring with the char removed if found, {@code null} if null String input.
      * @since 2.1
      */
@@ -6391,8 +6394,8 @@ public class StringUtils {
      * </pre>
      *
      * @param str         String to replace characters in, may be null.
-     * @param searchChar  The character to search for, may be null.
-     * @param replaceChar The character to replace, may be null.
+     * @param searchChar  The character to search for.
+     * @param replaceChar The replacement character.
      * @return modified String, {@code null} if null string input.
      * @since 2.0
      */
@@ -6943,7 +6946,7 @@ public class StringUtils {
      * StringUtils.reverseDelimited(null, *)      = null
      * StringUtils.reverseDelimited("", *)        = ""
      * StringUtils.reverseDelimited("a.b.c", 'x') = "a.b.c"
-     * StringUtils.reverseDelimited("a.b.c", ".") = "c.b.a"
+     * StringUtils.reverseDelimited("a.b.c", '.') = "c.b.a"
      * </pre>
      *
      * @param str           The String to reverse, may be null.
@@ -7295,7 +7298,7 @@ public class StringUtils {
     }
 
     /**
-     * Splits a String by Character type as returned by {@code java.lang.Character.getType(char)}. Groups of contiguous characters of the same type are returned
+     * Splits a String by Character type as returned by {@link Character#getType(int)}. Groups of contiguous characters of the same type are returned
      * as complete tokens, with the following exception: if {@code camelCase} is {@code true}, the character of type {@link Character#UPPERCASE_LETTER}, if any,
      * immediately preceding a token of type {@link Character#LOWERCASE_LETTER} will belong to the following token rather than to the preceding, if any,
      * {@link Character#UPPERCASE_LETTER} token.
@@ -7616,7 +7619,7 @@ public class StringUtils {
      * </pre>
      *
      * @param str           The String to parse, may be {@code null}.
-     * @param separatorChar The character used as the delimiter, {@code null} splits on whitespace.
+     * @param separatorChar The character used as the delimiter.
      * @return An array of parsed Strings, {@code null} if null String input.
      * @since 2.1
      */
@@ -7666,8 +7669,7 @@ public class StringUtils {
      * separators.
      *
      * <p>
-     * The separator is not included in the returned String array. Adjacent separators are treated as separators for empty tokens. Adjacent separators are
-     * treated as one separator.
+     * The separator is not included in the returned String array. Adjacent separators are treated as separators for empty tokens.
      * </p>
      *
      * <p>
@@ -7895,8 +7897,8 @@ public class StringUtils {
      *
      * @param sequence      The CharSequence to check, may be null.
      * @param searchStrings The case-sensitive CharSequence prefixes, may be empty or contain {@code null}.
-     * @return {@code true} if the input {@code sequence} is {@code null} AND no {@code searchStrings} are provided, or the input {@code sequence} begins with
-     *         any of the provided case-sensitive {@code searchStrings}.
+     * @return {@code true} if the nonempty input {@code sequence} starts with any of the provided case-sensitive {@code searchStrings};
+     *         {@code false} if the sequence or search array is null or empty.
      * @see StringUtils#startsWith(CharSequence, CharSequence)
      * @since 2.5
      * @since 3.0 Changed signature from startsWithAny(String, String[]) to startsWithAny(CharSequence, CharSequence...)
@@ -9029,8 +9031,9 @@ public class StringUtils {
      * Specifically:
      * </p>
      * <ul>
-     * <li>If {@code str} is less than {@code maxWidth} characters long, return it.</li>
-     * <li>Else truncate it to {@code substring(str, offset, maxWidth)}.</li>
+     * <li>Take at most {@code maxWidth} characters starting at {@code offset}.</li>
+     * <li>If {@code offset} is at or beyond the end of the string, return an empty string.</li>
+     * <li>Move boundaries inward when necessary to avoid splitting a surrogate pair.</li>
      * <li>If {@code maxWidth} is less than {@code 0}, throw an {@link IllegalArgumentException}.</li>
      * <li>If {@code offset} is less than {@code 0}, throw an {@link IllegalArgumentException}.</li>
      * <li>In no case will it return a String of length greater than {@code maxWidth}.</li>
@@ -9244,7 +9247,7 @@ public class StringUtils {
      * </pre>
      *
      * @param str    The String to upper case, may be null.
-     * @param locale The locale that defines the case transformation rules, must not be null.
+     * @param locale The locale that defines the case transformation rules, null uses the default locale.
      * @return The upper-cased String, {@code null} if null String input.
      * @since 2.5
      */

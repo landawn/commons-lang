@@ -23,7 +23,7 @@ package org.apache.commons.lang3.builder;
  *
  * <p>
  * The calculation of the differences is <em>consistent with equals</em> if
- * and only if {@code d1.equals(d2)} implies {@code d1.diff(d2) == ""}.
+ * and only if {@code d1.equals(d2)} implies {@code d1.diff(d2).getNumberOfDiffs() == 0}.
  * It is strongly recommended that implementations are consistent with equals
  * to avoid confusion. Note that {@code null} is not an instance of any class
  * and {@code d1.diff(null)} should throw a {@link NullPointerException}.
@@ -48,7 +48,7 @@ public interface Diffable<T> {
      * Retrieves a list of the differences between
      * this object and the supplied object.
      *
-     * @param obj The object to diff against, can be {@code null}
+     * @param obj The object to diff against, not {@code null}.
      * @return A list of differences
      * @throws NullPointerException Thrown if the specified object is {@code null}.
      */

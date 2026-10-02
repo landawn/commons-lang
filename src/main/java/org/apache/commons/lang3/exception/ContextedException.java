@@ -60,7 +60,7 @@ import org.apache.commons.lang3.tuple.Pair;
  *     throw e.setContextValue("Transaction Id", transactionId);
  *   } catch (Exception e) {
  *     if (e instanceof ExceptionContext) {
- *       e.setContextValue("Transaction Id", transactionId);
+ *       ((ExceptionContext) e).setContextValue("Transaction Id", transactionId);
  *     }
  *     throw e;
  *   }

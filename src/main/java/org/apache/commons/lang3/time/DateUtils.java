@@ -414,7 +414,8 @@ public class DateUtils {
      * @param fragment The Calendar field part of calendar to calculate.
      * @param unit     The time unit.
      * @return number of units within the fragment of the calendar.
-     * @throws NullPointerException Thrown if the date is {@code null} or fragment is not supported.
+     * @throws NullPointerException Thrown if the calendar is {@code null}.
+     * @throws IllegalArgumentException Thrown if the fragment is not supported.
      * @since 2.4
      */
     private static long getFragment(final Calendar calendar, final int fragment, final TimeUnit unit) {
@@ -543,9 +544,9 @@ public class DateUtils {
      *
      * <ul>
      *  <li>January 28, 2008 with Calendar.MONTH as fragment will return 28
-     *   (equivalent to deprecated date.getDay())</li>
+     *   (equivalent to deprecated date.getDate())</li>
      *  <li>February 28, 2008 with Calendar.MONTH as fragment will return 28
-     *   (equivalent to deprecated date.getDay())</li>
+     *   (equivalent to deprecated date.getDate())</li>
      *  <li>January 28, 2008 with Calendar.YEAR as fragment will return 28</li>
      *  <li>February 28, 2008 with Calendar.YEAR as fragment will return 59</li>
      *  <li>January 28, 2008 with Calendar.MILLISECOND as fragment will return 0
@@ -706,7 +707,7 @@ public class DateUtils {
      * Valid fragments are: Calendar.YEAR, Calendar.MONTH, both
      * Calendar.DAY_OF_YEAR and Calendar.DATE, Calendar.HOUR_OF_DAY,
      * Calendar.MINUTE, Calendar.SECOND and Calendar.MILLISECOND
-     * A fragment less than or equal to a SECOND field will return 0.
+     * The Calendar.MILLISECOND fragment will return 0.
      * </p>
      *
      * <ul>
@@ -750,11 +751,11 @@ public class DateUtils {
      *
      * <ul>
      *  <li>January 1, 2008 7:15:10.538 with Calendar.HOUR_OF_DAY as fragment will return 15
-     *   (equivalent to calendar.get(Calendar.MINUTES))</li>
+     *   (equivalent to calendar.get(Calendar.MINUTE))</li>
      *  <li>January 6, 2008 7:15:10.538 with Calendar.HOUR_OF_DAY as fragment will return 15
-     *   (equivalent to calendar.get(Calendar.MINUTES))</li>
-     *  <li>January 1, 2008 7:15:10.538 with Calendar.MONTH as fragment will return 15</li>
-     *  <li>January 6, 2008 7:15:10.538 with Calendar.MONTH as fragment will return 435 (7*60 + 15)</li>
+     *   (equivalent to calendar.get(Calendar.MINUTE))</li>
+     *  <li>January 1, 2008 7:15:10.538 with Calendar.MONTH as fragment will return 435 (7*60 + 15)</li>
+     *  <li>January 6, 2008 7:15:10.538 with Calendar.MONTH as fragment will return 7635 (5*24*60 + 7*60 + 15)</li>
      *  <li>January 16, 2008 7:15:10.538 with Calendar.MILLISECOND as fragment will return 0
      *   (a millisecond cannot be split in minutes)</li>
      * </ul>
@@ -795,8 +796,8 @@ public class DateUtils {
      *   (equivalent to deprecated date.getMinutes())</li>
      *  <li>January 6, 2008 7:15:10.538 with Calendar.HOUR_OF_DAY as fragment will return 15
      *   (equivalent to deprecated date.getMinutes())</li>
-     *  <li>January 1, 2008 7:15:10.538 with Calendar.MONTH as fragment will return 15</li>
-     *  <li>January 6, 2008 7:15:10.538 with Calendar.MONTH as fragment will return 435 (7*60 + 15)</li>
+     *  <li>January 1, 2008 7:15:10.538 with Calendar.MONTH as fragment will return 435 (7*60 + 15)</li>
+     *  <li>January 6, 2008 7:15:10.538 with Calendar.MONTH as fragment will return 7635 (5*24*60 + 7*60 + 15)</li>
      *  <li>January 16, 2008 7:15:10.538 with Calendar.MILLISECOND as fragment will return 0
      *   (a millisecond cannot be split in minutes)</li>
      * </ul>
@@ -979,12 +980,12 @@ public class DateUtils {
      *
      * <p>
      * This method compares the values of the fields of the two objects.
-     * In addition, both calendars must be the same of the same type.
+     * In addition, both calendars must be of the same type. Their time zones are not compared.
      * </p>
      *
      * @param cal1  The first calendar, not altered, not null.
      * @param cal2  The second calendar, not altered, not null.
-     * @return true if they represent the same millisecond instant.
+     * @return true if both calendars have the same local date and time fields and calendar type.
      * @throws NullPointerException Thrown if either date is {@code null}.
      * @since 2.1
      */

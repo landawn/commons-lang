@@ -49,6 +49,14 @@ import org.junit.jupiter.params.provider.ValueSource;
  */
 class NumberUtilsTest extends AbstractLangTest {
 
+    @Test
+    void testCreateNumberRejectsSurroundingWhitespace() {
+        for (final String value : new String[] { " 1.5", "\t1e2", " 1F", "1D ", "1.5\n", "\u00001.5" }) {
+            assertThrows(NumberFormatException.class, () -> NumberUtils.createNumber(value), value);
+            assertFalse(NumberUtils.isCreatable(value), value);
+        }
+    }
+
     private static void assertCreateNumberZero(final String number, final Object zero, final Object negativeZero) {
         assertEquals(zero, NumberUtils.createNumber(number), () -> "Input: " + number);
         assertEquals(zero, NumberUtils.createNumber("+" + number), () -> "Input: +" + number);

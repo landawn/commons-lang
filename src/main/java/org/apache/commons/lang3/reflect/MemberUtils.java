@@ -253,6 +253,9 @@ final class MemberUtils {
             return true;
         }
         if (method.isVarArgs()) {
+            if (parameterTypes.length < methodParameterTypes.length - 1) {
+                return false;
+            }
             int i;
             for (i = 0; i < methodParameterTypes.length - 1 && i < parameterTypes.length; i++) {
                 if (!ClassUtils.isAssignable(parameterTypes[i], methodParameterTypes[i], true)) {
@@ -278,7 +281,7 @@ final class MemberUtils {
      * Tests whether a given set of modifiers implies package access.
      *
      * @param modifiers to test.
-     * @return {@code true} unless {@code package}/{@code protected}/{@code private} modifier detected
+     * @return {@code true} unless a {@code public}, {@code protected}, or {@code private} modifier is detected.
      */
     static boolean isPackage(final int modifiers) {
         return (modifiers & ACCESS_TEST) == 0;
@@ -317,7 +320,8 @@ final class MemberUtils {
      * </p>
      *
      * @param obj The AccessibleObject to set as accessible, may be null.
-     * @return A boolean indicating whether the accessibility of the object was set to true.
+     * @param <T> The accessible object type.
+     * @return The supplied object, which may have had its accessibility flag set, or {@code null} for null input.
      */
     static <T extends AccessibleObject> T setAccessibleWorkaround(final T obj) {
         if (AccessibleObjects.isAccessible(obj)) {

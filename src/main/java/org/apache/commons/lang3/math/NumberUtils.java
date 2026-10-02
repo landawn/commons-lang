@@ -176,7 +176,7 @@ public class NumberUtils {
      * Returns {@code null} if the string is {@code null}.
      * </p>
      *
-     * @param str A {@link String} to convert, may be null.Return
+     * @param str A {@link String} to convert, may be null.
      * @return converted {@link BigDecimal} (or null if the input is null).
      * @throws NumberFormatException Thrown if the value cannot be converted.
      */
@@ -337,7 +337,7 @@ public class NumberUtils {
      * </p>
      *
      * <p>
-     * Integral values with a leading {@code 0} will be interpreted as octal; the returned number will be Integer, Long or BigDecimal as appropriate.
+     * Integral values with a leading {@code 0} will be interpreted as octal; the returned number will be Integer, Long or BigInteger as appropriate.
      * </p>
      *
      * <p>
@@ -362,6 +362,9 @@ public class NumberUtils {
         // Need to deal with all possible hex prefixes here
         final String[] hexPrefixes = { "0x", "0X", "#" };
         final int length = str.length();
+        if (str.charAt(0) <= ' ' || str.charAt(length - 1) <= ' ') {
+            throw new NumberFormatException(str + " is not a valid number.");
+        }
         final int offset = isSign(str.charAt(0)) ? 1 : 0;
         int pfxLen = 0;
         for (final String pfx : hexPrefixes) {

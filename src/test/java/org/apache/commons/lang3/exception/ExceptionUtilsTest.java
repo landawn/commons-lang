@@ -51,6 +51,20 @@ import org.junit.jupiter.api.Test;
  */
 class ExceptionUtilsTest extends AbstractLangTest {
 
+    @Test
+    void testRemoveCommonFramesPreservesEarlierMatchingFrames() {
+        final List<String> causeFrames = new ArrayList<>(Arrays.asList("recursive", "cause", "shared"));
+        ExceptionUtils.removeCommonFrames(causeFrames, Arrays.asList("recursive", "wrapper", "shared"));
+        assertEquals(Arrays.asList("recursive", "cause"), causeFrames);
+    }
+
+    @Test
+    void testRemoveCommonFramesWithoutCommonSuffix() {
+        final List<String> causeFrames = new ArrayList<>(Arrays.asList("same", "cause"));
+        ExceptionUtils.removeCommonFrames(causeFrames, Arrays.asList("same", "wrapper"));
+        assertEquals(Arrays.asList("same", "cause"), causeFrames);
+    }
+
     private static final class CountingException extends Exception {
         private static final long serialVersionUID = 1L;
 

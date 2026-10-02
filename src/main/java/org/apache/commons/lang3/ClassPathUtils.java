@@ -33,8 +33,8 @@ public class ClassPathUtils {
     /**
      * Converts a package name to a Java path ('/').
      *
-     * @param path The source path.
-     * @return A package name.
+     * @param path The source package name.
+     * @return A Java resource path with package separators replaced by slashes.
      * @throws NullPointerException Thrown if {@code path} is null.
      * @since 3.13.0
      */

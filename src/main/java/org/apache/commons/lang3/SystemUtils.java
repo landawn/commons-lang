@@ -1786,7 +1786,7 @@ public class SystemUtils {
     public static final boolean IS_OS_SUN_OS = getOsNameMatches("SunOS");
 
     /**
-     * The constant {@code true} if this is a Unix like system, as in any of AIX, HP-UX, Irix, Linux, MacOSX, Solaris or SUN OS.
+     * The constant {@code true} if this is a Unix like system: AIX, HP-UX, Irix, Linux, MacOSX, Solaris, SunOS, FreeBSD, OpenBSD, or NetBSD.
      *
      * <p>
      * The field will return {@code false} if {@code OS_NAME} is {@code null}.
@@ -2139,7 +2139,7 @@ public class SystemUtils {
      *
      * @param name         The environment variable name.
      * @param defaultValue The default value.
-     * @return The environment variable value or {@code defaultValue} if a security problem occurs.
+     * @return The environment variable value or {@code defaultValue} if the variable is unset or a security problem occurs.
      * @since 3.8
      */
     public static String getEnvironmentVariable(final String name, final String defaultValue) {
@@ -2171,8 +2171,7 @@ public class SystemUtils {
      * Gets the current Java home directory as a {@link File}.
      *
      * @return A directory.
-     * @throws SecurityException Thrown if a security manager exists and its {@code checkPropertyAccess} method doesn't allow access to the specified system
-     *         property.
+     * @throws NullPointerException Thrown if the property is absent or cannot be read due to security restrictions.
      * @see SystemProperties#getJavaHome()
      * @since 2.1
      */
@@ -2181,11 +2180,10 @@ public class SystemUtils {
     }
 
     /**
-     * Gets the current Java home directory as a {@link File}.
+     * Gets the current Java home directory as a {@link Path}.
      *
      * @return A directory.
-     * @throws SecurityException Thrown if a security manager exists and its {@code checkPropertyAccess} method doesn't allow access to the specified system
-     *         property.
+     * @throws NullPointerException Thrown if the property is absent or cannot be read due to security restrictions.
      * @see SystemProperties#getJavaHome()
      * @since 3.18.0
      */
@@ -2197,8 +2195,7 @@ public class SystemUtils {
      * Gets the current Java IO temporary directory as a {@link File}.
      *
      * @return A directory.
-     * @throws SecurityException Thrown if a security manager exists and its {@code checkPropertyAccess} method doesn't allow access to the specified system
-     *         property.
+     * @throws NullPointerException Thrown if the property is absent or cannot be read due to security restrictions.
      * @see SystemProperties#getJavaIoTmpdir()
      * @since 2.1
      */
@@ -2210,8 +2207,7 @@ public class SystemUtils {
      * Gets the current Java IO temporary directory as a {@link Path}.
      *
      * @return A directory.
-     * @throws SecurityException Thrown if a security manager exists and its {@code checkPropertyAccess} method doesn't allow access to the specified system
-     *         property.
+     * @throws NullPointerException Thrown if the property is absent or cannot be read due to security restrictions.
      * @see SystemProperties#getJavaIoTmpdir()
      * @since 3.18.0
      */
@@ -2272,8 +2268,7 @@ public class SystemUtils {
      * </p>
      *
      * @return A directory.
-     * @throws SecurityException Thrown if a security manager exists and its {@code checkPropertyAccess} method doesn't allow access to the specified system
-     *         property.
+     * @throws NullPointerException Thrown if the property is absent or cannot be read due to security restrictions.
      * @see SystemProperties#getUserDir()
      * @since 2.1
      */
@@ -2288,8 +2283,7 @@ public class SystemUtils {
      * </p>
      *
      * @return A directory.
-     * @throws SecurityException Thrown if a security manager exists and its {@code checkPropertyAccess} method doesn't allow access to the specified system
-     *         property.
+     * @throws NullPointerException Thrown if the property is absent or cannot be read due to security restrictions.
      * @see SystemProperties#getUserDir()
      * @since 3.18.0
      */
@@ -2304,8 +2298,7 @@ public class SystemUtils {
      * </p>
      *
      * @return A directory.
-     * @throws SecurityException Thrown if a security manager exists and its {@code checkPropertyAccess} method doesn't allow access to the specified system
-     *         property.
+     * @throws NullPointerException Thrown if the property is absent or cannot be read due to security restrictions.
      * @see SystemProperties#getUserHome()
      * @since 2.1
      */
@@ -2320,8 +2313,7 @@ public class SystemUtils {
      * </p>
      *
      * @return A directory.
-     * @throws SecurityException Thrown if a security manager exists and its {@code checkPropertyAccess} method doesn't allow access to the specified system
-     *         property.
+     * @throws NullPointerException Thrown if the property is absent or cannot be read due to security restrictions.
      * @see SystemProperties#getUserHome()
      * @since 3.18.0
      */
@@ -2336,8 +2328,6 @@ public class SystemUtils {
      * </p>
      *
      * @return A name.
-     * @throws SecurityException Thrown if a security manager exists and its {@code checkPropertyAccess} method doesn't allow access to the specified system
-     *         property.
      * @see SystemProperties#getUserName()
      * @since 3.10
      * @deprecated Use {@link SystemProperties#getUserName()}.
@@ -2355,8 +2345,6 @@ public class SystemUtils {
      *
      * @param defaultValue A default value.
      * @return A name.
-     * @throws SecurityException Thrown if a security manager exists and its {@code checkPropertyAccess} method doesn't allow access to the specified system
-     *         property.
      * @see SystemProperties#getUserName()
      * @since 3.10
      * @deprecated Use {@link SystemProperties#getUserName(String)}.
@@ -2389,7 +2377,7 @@ public class SystemUtils {
      * The result is based on the system property saved in {@link #JAVA_SPECIFICATION_VERSION}.
      * </p>
      *
-     * @param requiredVersion The required version, for example 1.31f.
+     * @param requiredVersion The required version, for example {@link JavaVersion#JAVA_1_8}.
      * @return {@code true} if the actual version is equal or greater than the required version.
      */
     public static boolean isJavaVersionAtLeast(final JavaVersion requiredVersion) {
@@ -2402,7 +2390,7 @@ public class SystemUtils {
      * The result is based on the system property saved in {@link #JAVA_SPECIFICATION_VERSION}.
      * </p>
      *
-     * @param requiredVersion The required version, for example 1.31f.
+     * @param requiredVersion The required version, for example {@link JavaVersion#JAVA_1_8}.
      * @return {@code true} if the actual version is equal or less than the required version.
      * @since 3.9
      */

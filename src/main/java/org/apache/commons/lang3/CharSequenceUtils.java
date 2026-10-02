@@ -126,7 +126,7 @@ public class CharSequenceUtils {
      * (this.codePointAt(<em>k</em>) == searchChar) &amp;&amp; (<em>k</em> &gt;= start)
      * </pre>
      * <p>
-     * is true. In either case, if no such character occurs inm {@code cs} at or after position {@code start}, then {@code -1} is returned.
+     * is true. In either case, if no such character occurs in {@code cs} at or after position {@code start}, then {@code -1} is returned.
      * </p>
      * <p>
      * There is no restriction on the value of {@code start}. If it is negative, it has the same effect as if it were zero: the entire {@link CharSequence} may
@@ -397,7 +397,7 @@ public class CharSequenceUtils {
      * <p>
      * This provides the {@link CharSequence} equivalent to {@link String#substring(int)}.
      * The length (in {@code char}) of the returned sequence is {@code length() - start},
-     * so if {@code start == end} then an empty sequence is returned.
+     * so if {@code start == cs.length()} then an empty sequence is returned.
      * </p>
      *
      * @param cs  The specified subsequence, null returns null.

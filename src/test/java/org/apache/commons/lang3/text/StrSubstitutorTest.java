@@ -45,6 +45,12 @@ class StrSubstitutorTest extends AbstractLangTest {
 
     private Map<String, String> values;
 
+    @Test
+    void testNullSourceWithNullProperties() {
+        assertNull(StrSubstitutor.replace(null, (Properties) null));
+        assertEquals("${value}", StrSubstitutor.replace("${value}", (Properties) null));
+    }
+
     private void doTestNoReplace(final String replaceTemplate) {
         final StrSubstitutor sub = new StrSubstitutor(values);
 

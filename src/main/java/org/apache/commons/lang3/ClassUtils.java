@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
@@ -36,7 +37,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- * Operates on classes without using reflection.
+ * Operates on classes and class names.
  *
  * <p>
  * This class handles invalid {@code null} inputs as best it can. Each method documents its behavior in more detail.
@@ -625,7 +626,8 @@ public class ClassUtils {
     private static Class<?> getClass(final ClassLoader classLoader, final String className, final boolean initialize, final boolean normalizeWhitespace)
             throws ClassNotFoundException {
         // This method was re-written to avoid recursion and stack overflows found by fuzz testing.
-        String next = className;
+        // Primitive names must undergo the same whitespace normalization as reference and array names.
+        String next = normalizeWhitespace ? StringUtils.deleteWhitespace(className) : className;
         int lastDotIndex = -1;
         do {
             try {
@@ -1325,6 +1327,9 @@ public class ClassUtils {
 
                 @Override
                 public Class<?> next() {
+                    if (!hasNext()) {
+                        throw new NoSuchElementException();
+                    }
                     return next.getAndUpdate(Class::getSuperclass);
                 }
 

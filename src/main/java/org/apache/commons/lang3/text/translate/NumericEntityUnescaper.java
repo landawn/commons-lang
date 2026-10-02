@@ -27,7 +27,7 @@ import org.apache.commons.lang3.CharUtils;
 /**
  * Translate XML numeric entities of the form &amp;#[xX]?\d+;? to the specific code point.
  *
- * Note that the semicolon is optional.
+ * The semicolon is required by default and can be made optional with {@link OPTION#semiColonOptional}.
  *
  * @since 3.0
  * @deprecated As of <a href="https://commons.apache.org/proper/commons-lang/changes-report.html#a3.6">3.6</a>, use Apache Commons Text
@@ -67,7 +67,7 @@ public class NumericEntityUnescaper extends CharSequenceTranslator {
     private final EnumSet<OPTION> options;
 
     /**
-     * Create a UnicodeUnescaper.
+     * Creates a NumericEntityUnescaper.
      *
      * The constructor takes a list of options, only one type of which is currently
      * available (whether to allow, error or ignore the semicolon on the end of a

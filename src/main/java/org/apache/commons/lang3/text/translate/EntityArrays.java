@@ -23,7 +23,7 @@ package org.apache.commons.lang3.text.translate;
  *
  * @since 3.0
  * @deprecated As of <a href="https://commons.apache.org/proper/commons-lang/changes-report.html#a3.6">3.6</a>, use Apache Commons Text
- * <a href="https://commons.apache.org/proper/commons-text/javadocs/api-release/org/apache/commons/text/translate/CodePointTranslator.html">
+ * <a href="https://commons.apache.org/proper/commons-text/javadocs/api-release/org/apache/commons/text/translate/EntityArrays.html">
  * EntityArrays</a>.
  */
 @Deprecated
@@ -358,19 +358,19 @@ public class EntityArrays {
     /**
      * Mapping to escape the apostrophe character to its XML character entity.
      *
-     * @return The mapping table.
+     * @return An independent copy of the mapping table.
      */
     public static String[][] APOS_ESCAPE() {
-        return APOS_ESCAPE.clone();
+        return copy(APOS_ESCAPE);
     }
 
     /**
      * Reverse of {@link #APOS_ESCAPE()} for unescaping purposes.
      *
-     * @return The mapping table.
+     * @return An independent copy of the mapping table.
      */
     public static String[][] APOS_UNESCAPE() {
-        return APOS_UNESCAPE.clone();
+        return copy(APOS_UNESCAPE);
     }
 
     /**
@@ -380,19 +380,19 @@ public class EntityArrays {
      * Namely: {@code " ' & < >}. The apostrophe is escaped as the numeric reference {@code &#39;}.
      * </p>
      *
-     * @return The mapping table.
+     * @return An independent copy of the mapping table.
      */
     public static String[][] BASIC_ESCAPE() {
-        return BASIC_ESCAPE.clone();
+        return copy(BASIC_ESCAPE);
     }
 
     /**
      * Reverse of {@link #BASIC_ESCAPE()} for unescaping purposes.
      *
-     * @return The mapping table.
+     * @return An independent copy of the mapping table.
      */
     public static String[][] BASIC_UNESCAPE() {
-        return BASIC_UNESCAPE.clone();
+        return copy(BASIC_UNESCAPE);
     }
 
     /**
@@ -400,19 +400,28 @@ public class EntityArrays {
      * references</a>. Note that this must be used with {@link #ISO8859_1_ESCAPE()} to get the full list of
      * HTML 4.0 character entities.
      *
-     * @return The mapping table.
+     * @return An independent copy of the mapping table.
      */
     public static String[][] HTML40_EXTENDED_ESCAPE() {
-        return HTML40_EXTENDED_ESCAPE.clone();
+        return copy(HTML40_EXTENDED_ESCAPE);
     }
 
     /**
      * Reverse of {@link #HTML40_EXTENDED_ESCAPE()} for unescaping purposes.
      *
-     * @return The mapping table.
+     * @return An independent copy of the mapping table.
      */
     public static String[][] HTML40_EXTENDED_UNESCAPE() {
-        return HTML40_EXTENDED_UNESCAPE.clone();
+        return copy(HTML40_EXTENDED_UNESCAPE);
+    }
+
+    private static String[][] copy(final String[][] array) {
+        // Copy the rows as well, so callers cannot change the shared lookup tables.
+        final String[][] copy = new String[array.length][];
+        for (int i = 0; i < array.length; i++) {
+            copy[i] = array[i].clone();
+        }
+        return copy;
     }
 
     /**
@@ -434,19 +443,19 @@ public class EntityArrays {
      * Mapping to escape <a href="https://secure.wikimedia.org/wikipedia/en/wiki/ISO/IEC_8859-1">ISO-8859-1</a>
      * characters to their named HTML 3.x equivalents.
      *
-     * @return The mapping table.
+     * @return An independent copy of the mapping table.
      */
     public static String[][] ISO8859_1_ESCAPE() {
-        return ISO8859_1_ESCAPE.clone();
+        return copy(ISO8859_1_ESCAPE);
     }
 
     /**
      * Reverse of {@link #ISO8859_1_ESCAPE()} for unescaping purposes.
      *
-     * @return The mapping table.
+     * @return An independent copy of the mapping table.
      */
     public static String[][] ISO8859_1_UNESCAPE() {
-        return ISO8859_1_UNESCAPE.clone();
+        return copy(ISO8859_1_UNESCAPE);
     }
 
     /**
@@ -455,19 +464,19 @@ public class EntityArrays {
      * Namely: {@code \b \n \t \f \r}
      * </p>
      *
-     * @return The mapping table.
+     * @return An independent copy of the mapping table.
      */
     public static String[][] JAVA_CTRL_CHARS_ESCAPE() {
-        return JAVA_CTRL_CHARS_ESCAPE.clone();
+        return copy(JAVA_CTRL_CHARS_ESCAPE);
     }
 
     /**
      * Reverse of {@link #JAVA_CTRL_CHARS_ESCAPE()} for unescaping purposes.
      *
-     * @return The mapping table.
+     * @return An independent copy of the mapping table.
      */
     public static String[][] JAVA_CTRL_CHARS_UNESCAPE() {
-        return JAVA_CTRL_CHARS_UNESCAPE.clone();
+        return copy(JAVA_CTRL_CHARS_UNESCAPE);
     }
 
     /**

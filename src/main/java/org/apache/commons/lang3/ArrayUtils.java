@@ -779,7 +779,7 @@ public class ArrayUtils {
      * ArrayUtils.add(null, 0, "a")       = ["a"]
      * ArrayUtils.add(["a"], 1, null)     = ["a", null]
      * ArrayUtils.add(["a"], 1, "b")      = ["a", "b"]
-     * ArrayUtils.add(["a", "b"], 3, "c") = ["a", "b", "c"]
+     * ArrayUtils.add(["a", "b"], 2, "c") = ["a", "b", "c"]
      * </pre>
      *
      * @param <T> The component type of the array.
@@ -815,8 +815,8 @@ public class ArrayUtils {
      * </p>
      * <p>
      * If the input array is {@code null}, a new one element array is returned
-     * whose component type is the same as the element, unless the element itself is null,
-     * in which case the return type is Object[]
+     * whose component type is the same as the element. If the element is also {@code null},
+     * an {@link IllegalArgumentException} is thrown.
      * </p>
      * <pre>
      * ArrayUtils.add(null, null)      = Throws {@link IllegalArgumentException}
@@ -1406,7 +1406,7 @@ public class ArrayUtils {
      * </p>
      * <p>
      * If the input array is {@code null}, a new one element array is returned whose component type is the same as the
-     * element, unless the element itself is null, in which case the return type is Object[]
+     * element. If the element is also {@code null}, an {@link IllegalArgumentException} is thrown.
      * </p>
      * <pre>
      * ArrayUtils.addFirst(null, null)      = Throws {@link IllegalArgumentException}
@@ -1619,8 +1619,8 @@ public class ArrayUtils {
      * The resulting array length is the sum of lengths of all non-null input arrays.
      * </p>
      *
-     * @param arrays The arrays to concatenate. Can be empty, contain nulls,
-     *               or be null itself (treated as empty varargs).
+     * @param arrays The arrays to concatenate, not null. Can be empty
+     *               or contain null arrays, which are ignored.
      * @return A new boolean array containing all elements from the input arrays
      *         in the order they appear, or an empty array if no elements are present.
      * @throws NullPointerException Thrown if the input array of arrays is null.
@@ -1651,8 +1651,8 @@ public class ArrayUtils {
      * The resulting array length is the sum of lengths of all non-null input arrays.
      * </p>
      *
-     * @param arrays The arrays to concatenate. Can be empty, contain nulls,
-     *               or be null itself (treated as empty varargs).
+     * @param arrays The arrays to concatenate, not null. Can be empty
+     *               or contain null arrays, which are ignored.
      * @return A new byte array containing all elements from the input arrays
      *         in the order they appear, or an empty array if no elements are present.
      * @throws NullPointerException Thrown if the input array of arrays is null.
@@ -1683,8 +1683,8 @@ public class ArrayUtils {
      * The resulting array length is the sum of lengths of all non-null input arrays.
      * </p>
      *
-     * @param arrays The arrays to concatenate. Can be empty, contain nulls,
-     *               or be null itself (treated as empty varargs).
+     * @param arrays The arrays to concatenate, not null. Can be empty
+     *               or contain null arrays, which are ignored.
      * @return A new char array containing all elements from the input arrays
      *         in the order they appear, or an empty array if no elements are present.
      * @throws NullPointerException Thrown if the input array of arrays is null.
@@ -1715,8 +1715,8 @@ public class ArrayUtils {
      * The resulting array length is the sum of lengths of all non-null input arrays.
      * </p>
      *
-     * @param arrays The arrays to concatenate. Can be empty, contain nulls,
-     *               or be null itself (treated as empty varargs).
+     * @param arrays The arrays to concatenate, not null. Can be empty
+     *               or contain null arrays, which are ignored.
      * @return A new double array containing all elements from the input arrays
      *         in the order they appear, or an empty array if no elements are present.
      * @throws NullPointerException Thrown if the input array of arrays is null.
@@ -1747,8 +1747,8 @@ public class ArrayUtils {
      * The resulting array length is the sum of lengths of all non-null input arrays.
      * </p>
      *
-     * @param arrays The arrays to concatenate. Can be empty, contain nulls,
-     *               or be null itself (treated as empty varargs).
+     * @param arrays The arrays to concatenate, not null. Can be empty
+     *               or contain null arrays, which are ignored.
      * @return A new float array containing all elements from the input arrays
      *         in the order they appear, or an empty array if no elements are present.
      * @throws NullPointerException Thrown if the input array of arrays is null.
@@ -1779,8 +1779,8 @@ public class ArrayUtils {
      * The resulting array length is the sum of lengths of all non-null input arrays.
      * </p>
      *
-     * @param arrays The arrays to concatenate. Can be empty, contain nulls,
-     *               or be null itself (treated as empty varargs).
+     * @param arrays The arrays to concatenate, not null. Can be empty
+     *               or contain null arrays, which are ignored.
      * @return A new int array containing all elements from the input arrays
      *         in the order they appear, or an empty array if no elements are present.
      * @throws NullPointerException Thrown if the input array of arrays is null.
@@ -1811,8 +1811,8 @@ public class ArrayUtils {
      * The resulting array length is the sum of lengths of all non-null input arrays.
      * </p>
      *
-     * @param arrays The arrays to concatenate. Can be empty, contain nulls,
-     *               or be null itself (treated as empty varargs).
+     * @param arrays The arrays to concatenate, not null. Can be empty
+     *               or contain null arrays, which are ignored.
      * @return A new long array containing all elements from the input arrays
      *         in the order they appear, or an empty array if no elements are present.
      * @throws NullPointerException Thrown if the input array of arrays is null.
@@ -1843,8 +1843,8 @@ public class ArrayUtils {
      * The resulting array length is the sum of lengths of all non-null input arrays.
      * </p>
      *
-     * @param arrays The arrays to concatenate. Can be empty, contain nulls,
-     *               or be null itself (treated as empty varargs).
+     * @param arrays The arrays to concatenate, not null. Can be empty
+     *               or contain null arrays, which are ignored.
      * @return A new short array containing all elements from the input arrays
      *         in the order they appear, or an empty array if no elements are present.
      * @throws NullPointerException Thrown if the input array of arrays is null.
@@ -2231,7 +2231,7 @@ public class ArrayUtils {
      * This method returns an empty BitSet for a {@code null} input array.
      * </p>
      * <p>
-     * A negative startIndex is treated as zero. A startIndex larger than the array length will return an empty BitSet ({@code -1}).
+     * A negative startIndex is treated as zero. A startIndex larger than the array length will return an empty BitSet.
      * </p>
      *
      * @param array       The array to search for the object, may be {@code null}.
@@ -4560,7 +4560,8 @@ public class ArrayUtils {
                     return i;
                 }
             }
-        } else if (array.getClass().getComponentType().isInstance(objectToFind)) {
+        } else {
+            // Equal objects can have different runtime types, for example different List implementations.
             for (int i = startIndex; i >= 0; i--) {
                 if (objectToFind.equals(array[i])) {
                     return i;
@@ -5382,7 +5383,7 @@ public class ArrayUtils {
      * </pre>
      *
      * @param array   The array to remove the element from, may not be {@code null}.
-     * @param indices The positions of the elements to be removed.
+     * @param indices The positions of the elements to be removed; null or empty removes no elements.
      * @return A new array containing the existing elements except those at the specified positions or {@code null} if the input array is {@code null}.
      * @throws IndexOutOfBoundsException Thrown if any index is out of range (index &lt; 0 || index &gt;= array.length).
      * @since 3.0.1
@@ -5411,7 +5412,7 @@ public class ArrayUtils {
      * </pre>
      *
      * @param array   The array to remove the element from, may not be {@code null}.
-     * @param indices The positions of the elements to be removed.
+     * @param indices The positions of the elements to be removed; null or empty removes no elements.
      * @return A new array containing the existing elements except those at the specified positions or {@code null} if the input array is {@code null}.
      * @throws IndexOutOfBoundsException Thrown if any index is out of range (index &lt; 0 || index &gt;= array.length).
      * @since 3.0.1
@@ -5440,7 +5441,7 @@ public class ArrayUtils {
      * </pre>
      *
      * @param array   The array to remove the element from, may not be {@code null}.
-     * @param indices The positions of the elements to be removed.
+     * @param indices The positions of the elements to be removed; null or empty removes no elements.
      * @return A new array containing the existing elements except those at the specified positions or {@code null} if the input array is {@code null}.
      * @throws IndexOutOfBoundsException Thrown if any index is out of range (index &lt; 0 || index &gt;= array.length).
      * @since 3.0.1
@@ -5469,7 +5470,7 @@ public class ArrayUtils {
      * </pre>
      *
      * @param array   The array to remove the element from, may not be {@code null}.
-     * @param indices The positions of the elements to be removed.
+     * @param indices The positions of the elements to be removed; null or empty removes no elements.
      * @return A new array containing the existing elements except those at the specified positions or {@code null} if the input array is {@code null}.
      * @throws IndexOutOfBoundsException Thrown if any index is out of range (index &lt; 0 || index &gt;= array.length).
      * @since 3.0.1
@@ -5498,7 +5499,7 @@ public class ArrayUtils {
      * </pre>
      *
      * @param array   The array to remove the element from, may not be {@code null}.
-     * @param indices The positions of the elements to be removed.
+     * @param indices The positions of the elements to be removed; null or empty removes no elements.
      * @return A new array containing the existing elements except those at the specified positions or {@code null} if the input array is {@code null}.
      * @throws IndexOutOfBoundsException Thrown if any index is out of range (index &lt; 0 || index &gt;= array.length).
      * @since 3.0.1
@@ -5527,7 +5528,7 @@ public class ArrayUtils {
      * </pre>
      *
      * @param array   The array to remove the element from, may not be {@code null}.
-     * @param indices The positions of the elements to be removed.
+     * @param indices The positions of the elements to be removed; null or empty removes no elements.
      * @return A new array containing the existing elements except those at the specified positions or {@code null} if the input array is {@code null}.
      * @throws IndexOutOfBoundsException Thrown if any index is out of range (index &lt; 0 || index &gt;= array.length).
      * @since 3.0.1
@@ -5556,7 +5557,7 @@ public class ArrayUtils {
      * </pre>
      *
      * @param array   The array to remove the element from, may not be {@code null}.
-     * @param indices The positions of the elements to be removed.
+     * @param indices The positions of the elements to be removed; null or empty removes no elements.
      * @return A new array containing the existing elements except those at the specified positions or {@code null} if the input array is {@code null}.
      * @throws IndexOutOfBoundsException Thrown if any index is out of range (index &lt; 0 || index &gt;= array.length).
      * @since 3.0.1
@@ -5579,7 +5580,7 @@ public class ArrayUtils {
         }
         final int length = getLength(array);
         int diff = 0; // number of distinct indexes, i.e. number of entries that will be removed
-        final int[] clonedIndices = ArraySorter.sort(clone(indices));
+        final int[] clonedIndices = ArraySorter.sort(clone(nullToEmpty(indices)));
         // identify length of result array
         if (isNotEmpty(clonedIndices)) {
             int i = clonedIndices.length;
@@ -5598,7 +5599,7 @@ public class ArrayUtils {
         }
         // create result array
         final Object result = Array.newInstance(array.getClass().getComponentType(), length - diff);
-        if (diff < length && clonedIndices != null) {
+        if (diff < length) {
             int end = length; // index just after last copy
             int dest = length - diff; // number of entries so far not copied
             for (int i = clonedIndices.length - 1; i >= 0; i--) {
@@ -5638,7 +5639,7 @@ public class ArrayUtils {
      * </pre>
      *
      * @param array   The array to remove the element from, may not be {@code null}.
-     * @param indices The positions of the elements to be removed.
+     * @param indices The positions of the elements to be removed; null or empty removes no elements.
      * @return A new array containing the existing elements except those at the specified positions or {@code null} if the input array is {@code null}.
      * @throws IndexOutOfBoundsException Thrown if any index is out of range (index &lt; 0 || index &gt;= array.length).
      * @since 3.0.1
@@ -5664,7 +5665,7 @@ public class ArrayUtils {
      *
      * @param <T>     the component type of the array.
      * @param array   The array to remove the element from, may not be {@code null}.
-     * @param indices The positions of the elements to be removed.
+     * @param indices The positions of the elements to be removed; null or empty removes no elements.
      * @return A new array containing the existing elements except those at the specified positions or {@code null} if the input array is {@code null}.
      * @throws IndexOutOfBoundsException Thrown if any index is out of range (index &lt; 0 || index &gt;= array.length).
      * @since 3.0.1

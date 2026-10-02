@@ -471,7 +471,7 @@ public class ReflectionToStringBuilder extends ToStringBuilder {
      * </p>
      *
      * @param object
-     *            the Object to build a {@code toString} for, must not be {@code null}
+     *            the Object to build a {@code toString} for, may be {@code null}
      */
     public ReflectionToStringBuilder(final Object object) {
         super(object);
@@ -485,7 +485,7 @@ public class ReflectionToStringBuilder extends ToStringBuilder {
      * </p>
      *
      * @param object
-     *            the Object to build a {@code toString} for, must not be {@code null}
+     *            the Object to build a {@code toString} for, may be {@code null}
      * @param style
      *            the style of the {@code toString} to create, may be {@code null}
      */
@@ -652,20 +652,20 @@ public class ReflectionToStringBuilder extends ToStringBuilder {
     /**
      * Gets the excludeFieldNames.
      *
-     * @return The excludeFieldNames.
+     * @return A copy of the excluded field names, or {@code null} if no exclusion list is configured.
      */
     public String[] getExcludeFieldNames() {
-        return this.excludeFieldNames.clone();
+        return ArrayUtils.clone(this.excludeFieldNames);
     }
 
     /**
      * Gets the includeFieldNames
      *
-     * @return The includeFieldNames.
+     * @return A copy of the included field names, or {@code null} if no inclusion list is configured.
      * @since 3.13.0
      */
     public String[] getIncludeFieldNames() {
-        return this.includeFieldNames.clone();
+        return ArrayUtils.clone(this.includeFieldNames);
     }
 
     /**
@@ -826,15 +826,20 @@ public class ReflectionToStringBuilder extends ToStringBuilder {
             return getStyle().getNullText();
         }
 
-        validate();
+        try {
+            validate();
 
-        Class<?> clazz = getObject().getClass();
-        appendFieldsIn(clazz);
-        while (clazz.getSuperclass() != null && clazz != getUpToClass()) {
-            clazz = clazz.getSuperclass();
+            Class<?> clazz = getObject().getClass();
             appendFieldsIn(clazz);
+            while (clazz.getSuperclass() != null && clazz != getUpToClass()) {
+                clazz = clazz.getSuperclass();
+                appendFieldsIn(clazz);
+            }
+            return super.toString();
+        } finally {
+            // Field access or a nested toString can fail before appendEnd gets a chance to release the root.
+            ToStringStyle.unregister(getObject());
         }
-        return super.toString();
     }
 
     /**

@@ -61,6 +61,12 @@ import org.junit.jupiter.api.Test;
  */
 class FieldUtilsTest extends AbstractLangTest {
 
+    @Test
+    void testWriteDeclaredStaticFieldRejectsInstanceField() {
+        assertIllegalArgumentException(() -> FieldUtils.writeDeclaredStaticField(PubliclyShadowedChild.class, "s", "new"));
+        assertIllegalArgumentException(() -> FieldUtils.writeDeclaredStaticField(PubliclyShadowedChild.class, "s", "new", true));
+    }
+
     interface InterfaceWithConstant {
         int CONSTANT = 42;
     }

@@ -35,11 +35,14 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
@@ -54,6 +57,17 @@ import org.junit.jupiter.api.Test;
  */
 @SuppressWarnings("deprecation") // deliberate use of deprecated code
 class ArrayUtilsTest extends AbstractLangTest {
+
+    @Test
+    void testLastIndexOfEqualObjectsWithDifferentRuntimeTypes() {
+        final ArrayList<?>[] array = {new ArrayList<>(Arrays.asList("a")), new ArrayList<>(Arrays.asList("b")),
+                new ArrayList<>(Arrays.asList("a"))};
+        final List<String> target = new LinkedList<>(Arrays.asList("a"));
+        assertEquals(0, ArrayUtils.indexOf(array, target));
+        assertEquals(2, ArrayUtils.lastIndexOf(array, target));
+        assertEquals(0, ArrayUtils.lastIndexOf(array, target, 1));
+        assertEquals(-1, ArrayUtils.lastIndexOf(array, new LinkedList<>(Arrays.asList("c"))));
+    }
 
     private static final class TestClass {
         // empty

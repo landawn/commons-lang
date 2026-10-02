@@ -330,8 +330,8 @@ public class BasicThreadFactory implements ThreadFactory {
 
     /**
      * Gets the number of threads this factory has already created. This
-     * class maintains an internal counter that is incremented each time the
-     * {@link #newThread(Runnable)} method is invoked.
+     * class maintains an internal counter that is incremented for each non-null thread returned by the wrapped factory,
+     * whether or not a naming pattern is configured.
      *
      * @return The number of threads created by this factory.
      */
@@ -370,9 +370,9 @@ public class BasicThreadFactory implements ThreadFactory {
      * @param thread The thread to be initialized.
      */
     private void initializeThread(final Thread thread) {
+        final long count = threadCounter.incrementAndGet();
         if (getNamingPattern() != null) {
-            final Long count = Long.valueOf(threadCounter.incrementAndGet());
-            thread.setName(String.format(getNamingPattern(), count));
+            thread.setName(String.format(getNamingPattern(), Long.valueOf(count)));
         }
         if (getUncaughtExceptionHandler() != null) {
             thread.setUncaughtExceptionHandler(getUncaughtExceptionHandler());
@@ -391,12 +391,14 @@ public class BasicThreadFactory implements ThreadFactory {
      * corresponding configuration options are set.
      *
      * @param runnable The {@link Runnable} to be executed by the new thread.
-     * @return The newly created thread.
+     * @return The newly created thread, or {@code null} if the wrapped factory cannot create a thread.
      */
     @Override
     public Thread newThread(final Runnable runnable) {
         final Thread thread = getWrappedFactory().newThread(runnable);
-        initializeThread(thread);
+        if (thread != null) {
+            initializeThread(thread);
+        }
         return thread;
     }
 }

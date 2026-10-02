@@ -35,8 +35,8 @@ import java.util.TimeZone;
  * </p>
  *
  * <p>
- * Note that when using capital YYYY instead of lowercase yyyy, the formatter
- * will assume current year as week year is not supported. See {@link java.util.GregorianCalendar}
+ * Capital {@code YYYY} formats the week year, which can differ from the calendar year formatted by lowercase {@code yyyy} near New Year.
+ * See {@link java.util.GregorianCalendar}
  * Week Year section for an explanation on the difference between calendar and week years.
  * </p>
  *

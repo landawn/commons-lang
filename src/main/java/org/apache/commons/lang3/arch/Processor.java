@@ -170,7 +170,7 @@ public class Processor {
     /**
      * Gets the processor type as {@link Type} enum.
      * The processor type defines, if the processor is for example
-     * an x86 or PPA.
+     * an x86 or PPC.
      *
      * @return A {@link Type} enum.
      */

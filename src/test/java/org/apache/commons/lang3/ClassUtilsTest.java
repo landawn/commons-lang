@@ -38,6 +38,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
@@ -56,6 +57,31 @@ import org.junitpioneer.jupiter.params.IntRangeSource;
  */
 @SuppressWarnings("boxing") // JUnit4 does not support primitive equality testing apart from long
 class ClassUtilsTest extends AbstractLangTest {
+
+    @Test
+    void testPrimitiveClassWhitespaceNormalization() throws ClassNotFoundException {
+        for (final Class<?> primitive : new Class<?>[] {boolean.class, byte.class, char.class, short.class, int.class,
+                long.class, float.class, double.class, void.class}) {
+            final String name = " \t" + primitive.getName() + "\n";
+            assertSame(primitive, ClassUtils.getClass(name));
+            assertThrows(ClassNotFoundException.class, () -> ClassUtils.getClassStrict(name));
+        }
+        assertSame(int.class, ClassUtils.getClass("i n t"));
+    }
+
+    @Test
+    void testHierarchyIteratorExhaustion() {
+        for (final Interfaces interfaces : Interfaces.values()) {
+            final Iterator<Class<?>> empty = ClassUtils.hierarchy(null, interfaces).iterator();
+            assertFalse(empty.hasNext());
+            assertThrows(NoSuchElementException.class, empty::next);
+            final Iterator<Class<?>> iterator = ClassUtils.hierarchy(Object.class, interfaces).iterator();
+            assertSame(Object.class, iterator.next());
+            assertFalse(iterator.hasNext());
+            assertThrows(NoSuchElementException.class, iterator::next);
+            assertFalse(iterator.hasNext());
+        }
+    }
 
     private static class CX implements IB, IA, IE {
         // empty

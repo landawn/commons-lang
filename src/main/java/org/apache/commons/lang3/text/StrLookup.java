@@ -133,14 +133,14 @@ public abstract class StrLookup<V> {
     }
 
     /**
-     * Returns a new lookup which uses a copy of the current
+     * Returns a shared lookup which reads the current
      * {@link System#getProperties() System properties}.
      * <p>
      * If a security manager blocked access to system properties, then null will
      * be returned from every lookup.
      * </p>
      * <p>
-     * If a null key is used, this lookup will throw a NullPointerException.
+     * A null or empty key returns null.
      * </p>
      *
      * @return A lookup using system properties, not null.

@@ -89,7 +89,7 @@ public final class DoubleRange extends NumberRange<Double> {
      * below, or the range maximum if above.
      *
      * <pre>{@code
-     * LongRange range = LongRange.of(16, 64);
+     * DoubleRange range = DoubleRange.of(16, 64);
      * range.fit(-9) -->  16
      * range.fit(0)  -->  16
      * range.fit(15) -->  16

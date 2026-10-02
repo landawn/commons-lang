@@ -172,12 +172,12 @@ public class MutableDouble extends Number implements Comparable<MutableDouble>, 
     }
 
     /**
-     * Compares this object against the specified object. The result is {@code true} if and only if the argument is not {@code null} and is a {@link Double}
+     * Compares this object against the specified object. The result is {@code true} if and only if the argument is not {@code null} and is a {@link MutableDouble}
      * object that represents a double that has the identical bit pattern to the bit pattern of the double represented by this object. For this purpose, two
-     * {@code double} values are considered to be the same if and only if the method {@link Double#doubleToLongBits(double)}returns the same long value when
+     * {@code double} values are considered to be the same if and only if the method {@link Double#doubleToLongBits(double)} returns the same long value when
      * applied to each.
      * <p>
-     * Note that in most cases, for two instances of class {@link Double},{@code d1} and {@code d2}, the value of {@code d1.equals(d2)} is {@code true} if and
+     * Note that in most cases, for two instances of class {@link MutableDouble}, {@code d1} and {@code d2}, the value of {@code d1.equals(d2)} is {@code true} if and
      * only if:
      * </p>
      * <pre>

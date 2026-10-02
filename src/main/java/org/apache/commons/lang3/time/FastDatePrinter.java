@@ -1268,7 +1268,7 @@ public class FastDatePrinter implements DatePrinter, Serializable {
      * @param toAppendTo  The buffer to append to.
      * @param pos  The position; ignored.
      * @return The buffer passed in.
-     * @deprecated Use {{@link #format(Date)}, {{@link #format(Calendar)}, {{@link #format(long)}.
+     * @deprecated Use {@link #format(Date)}, {@link #format(Calendar)}, {@link #format(long)}.
      */
     @Deprecated
     @Override

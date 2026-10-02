@@ -1050,6 +1050,19 @@ class StringUtilsTest extends AbstractLangTest {
     }
 
     @Test
+    void testJoin_ArrayIndexBounds() {
+        final Object[] array = {"a", "b"};
+        assertThrows(ArrayIndexOutOfBoundsException.class, () -> StringUtils.join(array, ',', -1, 1));
+        assertThrows(ArrayIndexOutOfBoundsException.class, () -> StringUtils.join(array, ",", -1, 1));
+        assertThrows(ArrayIndexOutOfBoundsException.class, () -> StringUtils.join(array, ',', 0, 3));
+        assertThrows(ArrayIndexOutOfBoundsException.class, () -> StringUtils.join(array, ",", 0, 3));
+        assertEquals("", StringUtils.join(array, ",", 2, 2));
+        assertEquals("", StringUtils.join(array, ",", 2, 1));
+        assertEquals("", StringUtils.join(array, ",", 1, Integer.MIN_VALUE));
+        assertNull(StringUtils.join((Object[]) null, ",", -1, 3));
+    }
+
+    @Test
     void testJoin_ArrayOfBooleans() {
         assertNull(StringUtils.join((boolean[]) null, COMMA_SEPARATOR_CHAR));
         assertEquals("false;false", StringUtils.join(ARRAY_FALSE_FALSE, SEPARATOR_CHAR));

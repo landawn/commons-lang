@@ -460,8 +460,8 @@ public class CharUtils {
     }
 
     /**
-     * Converts the character to the Integer it represents, throwing an
-     * exception if the character is not numeric.
+     * Converts the character to the Integer it represents, returning the default
+     * value if the character is not ASCII numeric.
      *
      * <p>
      * This method converts the char '1' to the int 1 and so on.
@@ -504,8 +504,8 @@ public class CharUtils {
     }
 
     /**
-     * Converts the character to the Integer it represents, throwing an
-     * exception if the character is not numeric.
+     * Converts the character to the Integer it represents, returning the default
+     * value if the character is null or not ASCII numeric.
      *
      * <p>
      * This method converts the char '1' to the int 1 and so on.
@@ -518,7 +518,7 @@ public class CharUtils {
      * </pre>
      *
      * @param ch  The character to convert
-     * @param defaultValue  The default value to use if the character is not numeric
+     * @param defaultValue  The default value to use if the character is null or not ASCII numeric
      * @return The int value of the character
      */
     public static int toIntValue(final Character ch, final int defaultValue) {

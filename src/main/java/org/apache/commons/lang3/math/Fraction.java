@@ -189,8 +189,7 @@ public final class Fraction extends Number implements Comparable<Fraction> {
      * @param numerator   The numerator, for example the three in 'three sevenths'
      * @param denominator The denominator, for example the seven in 'three sevenths'
      * @return A new fraction instance
-     * @throws ArithmeticException Thrown if the denominator is {@code zero} or the denominator is {@code negative} and the numerator is
-     *         {@code Integer#MIN_VALUE}.
+     * @throws ArithmeticException Thrown if the denominator is {@code zero}, or normalizing its sign would overflow either part.
      */
     public static Fraction getFraction(int numerator, int denominator) {
         checkDenominator(denominator);
@@ -542,7 +541,7 @@ public final class Fraction extends Number implements Comparable<Fraction> {
      * @param fraction The fraction to subtract, must not be {@code null}
      * @param isAdd true to add, false to subtract
      * @return A {@link Fraction} instance with the resulting values
-     * @throws IllegalArgumentException Thrown if the fraction is {@code null}.
+     * @throws NullPointerException Thrown if the fraction is {@code null}.
      * @throws ArithmeticException Thrown if the resulting numerator or denominator
      *   cannot be represented in an {@code int}.
      */
@@ -632,6 +631,17 @@ public final class Fraction extends Number implements Comparable<Fraction> {
         if (fraction.numerator == 0) {
             throw new ArithmeticException("The fraction to divide by must not be zero");
         }
+        if (fraction.numerator == Integer.MIN_VALUE) {
+            // Its inverse needs a positive denominator of 2^31. Cancel a factor of two before
+            // inversion; without one in either numerator of the quotient, the result cannot fit.
+            if ((numerator & 1) == 0) {
+                return new Fraction(numerator / 2, denominator)
+                        .multiplyBy(new Fraction(fraction.numerator / 2, fraction.denominator).invert());
+            }
+            if ((fraction.denominator & 1) == 0) {
+                return multiplyBy(new Fraction(fraction.numerator / 2, fraction.denominator / 2).invert());
+            }
+        }
         return multiplyBy(fraction.invert());
     }
 
@@ -700,7 +710,7 @@ public final class Fraction extends Number implements Comparable<Fraction> {
     }
 
     /**
-     * Gets the proper numerator, always positive.
+     * Gets the proper numerator, always non-negative.
      * <p>
      * An improper fraction 7/4 can be resolved into a proper one, 1 3/4. This method returns the 3 from the proper fraction.
      * </p>
@@ -709,7 +719,7 @@ public final class Fraction extends Number implements Comparable<Fraction> {
      * If the fraction is negative such as -7/4, it can be resolved into -1 3/4, so this method returns the positive proper numerator, 3.
      * </p>
      *
-     * @return The numerator fraction part of a proper fraction, always positive
+     * @return The numerator fraction part of a proper fraction, always non-negative.
      */
     public int getProperNumerator() {
         return Math.abs(numerator % denominator);
@@ -722,7 +732,7 @@ public final class Fraction extends Number implements Comparable<Fraction> {
      * </p>
      *
      * <p>
-     * If the fraction is negative such as -7/4, it can be resolved into -1 3/4, so this method returns the positive whole part -1.
+     * If the fraction is negative such as -7/4, it can be resolved into -1 3/4, so this method returns the signed whole part -1.
      * </p>
      *
      * @return The whole fraction part of a proper fraction, that includes the sign
@@ -834,7 +844,7 @@ public final class Fraction extends Number implements Comparable<Fraction> {
     /**
      * Gets a fraction that is raised to the passed in power.
      * <p>
-     * The returned fraction is in reduced form.
+     * The returned fraction is in reduced form unless the power is one, in which case this instance is returned unchanged.
      * </p>
      *
      * @param power The power to raise the fraction to

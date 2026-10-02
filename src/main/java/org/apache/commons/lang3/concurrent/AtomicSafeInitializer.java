@@ -26,14 +26,14 @@ import org.apache.commons.lang3.function.FailableSupplier;
 /**
  * A specialized {@link ConcurrentInitializer} implementation which is similar
  * to {@link AtomicInitializer}, but ensures that the {@link #initialize()}
- * method is called only once.
+ * method is called at most once at a time and is not called again after successful initialization.
  *
  * <p>
  * As {@link AtomicInitializer} this class is based on atomic variables, so it
  * can create an object under concurrent access without synchronization.
  * However, it implements an additional check to guarantee that the
  * {@link #initialize()} method which actually creates the object cannot be
- * called multiple times.
+ * called concurrently. If initialization fails, a later call to {@link #get()} retries it.
  * </p>
  * <p>
  * Because of this additional check this implementation is slightly less
@@ -43,7 +43,7 @@ import org.apache.commons.lang3.function.FailableSupplier;
  * </p>
  * <p>
  * From its semantics this class has the same properties as
- * {@link LazyInitializer}. It is a &quot;save&quot; implementation of the lazy
+ * {@link LazyInitializer}. It is a safe implementation of the lazy
  * initializer pattern. Comparing both classes in terms of efficiency is
  * difficult because which one is faster depends on multiple factors. Because
  * {@link AtomicSafeInitializer} does not use synchronization at all it probably
@@ -119,7 +119,7 @@ public class AtomicSafeInitializer<T> extends AbstractConcurrentInitializer<T, C
     }
 
     /**
-     * Gets (and initialize, if not initialized yet) the required object.
+     * Gets (and initializes, if not initialized yet) the required object. A failed initialization can be retried by a later call.
      *
      * @return lazily initialized object.
      * @throws ConcurrentException Thrown if the initialization of the object causes an exception.

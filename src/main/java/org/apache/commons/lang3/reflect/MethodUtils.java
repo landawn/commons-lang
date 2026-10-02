@@ -261,7 +261,7 @@ public class MethodUtils {
      * </p>
      *
      * @param <A>           the annotation type.
-     * @param method        The {@link Method} to query, may be null.
+     * @param method        The {@link Method} to query, not {@code null}.
      * @param annotationCls The {@link Annotation} to check if is present on the method.
      * @param searchSupers  determines if a lookup in the entire inheritance hierarchy of the given class is performed if the annotation was not directly
      *                      present.
@@ -381,6 +381,7 @@ public class MethodUtils {
         }
         // search through all methods
         final Method[] methods = cls.getMethods();
+        // Matching accepts both an assignable final array and individually supplied varargs elements.
         final List<Method> matchingMethods = Stream.of(methods)
                 .filter(method -> method.getName().equals(methodName) && MemberUtils.isMatchingMethod(method, requestTypes)).collect(Collectors.toList());
         // Sort methods by signature to force deterministic result
@@ -395,16 +396,6 @@ public class MethodUtils {
         }
         if (bestMatch != null) {
             MemberUtils.setAccessibleWorkaround(bestMatch);
-            if (bestMatch.isVarArgs()) {
-                final Class<?>[] bestMatchParameterTypes = bestMatch.getParameterTypes();
-                final Class<?> varArgType = bestMatchParameterTypes[bestMatchParameterTypes.length - 1].getComponentType();
-                for (int paramIdx = bestMatchParameterTypes.length - 1; paramIdx < requestTypes.length; paramIdx++) {
-                    final Class<?> parameterType = requestTypes[paramIdx];
-                    if (!ClassUtils.isAssignable(parameterType, varArgType, true)) {
-                        return null;
-                    }
-                }
-            }
         }
         return bestMatch;
     }
@@ -1077,7 +1068,7 @@ public class MethodUtils {
      * We follow the <a href="https://docs.oracle.com/javase/specs/jls/se21/html/jls-5.html#jls-5.1.2">JLS 5.1.2. Widening Primitive Conversion</a> rules.
      * </p>
      *
-     * @param args                 The array of arguments passed to the varags method.
+     * @param args                 The array of arguments passed to the varargs method.
      * @param methodParameterTypes The declared array of method parameter types.
      * @return An array of the variadic arguments passed to the method.
      * @throws NoSuchMethodException       Thrown if the constructor could not be found.
@@ -1096,8 +1087,8 @@ public class MethodUtils {
         final int mptLength = methodParameterTypes.length;
         if (args.length == mptLength) {
             final Object lastArg = args[args.length - 1];
-            if (lastArg == null || lastArg.getClass().equals(methodParameterTypes[mptLength - 1])) {
-                // The args array is already in the canonical form for the method.
+            if (lastArg == null || methodParameterTypes[mptLength - 1].isInstance(lastArg)) {
+                // An assignable array, including a covariant array, is already the complete varargs argument.
                 return args;
             }
         }
@@ -1110,11 +1101,12 @@ public class MethodUtils {
         final int varArgLength = args.length - mptLength + 1;
         // Copy the variadic arguments into the varargs array, converting types if needed.
         Object varArgsArray = Array.newInstance(varArgComponentWrappedType, varArgLength);
-        final boolean primitiveOrWrapper = ClassUtils.isPrimitiveOrWrapper(varArgComponentWrappedType);
+        final boolean primitive = varArgComponentType.isPrimitive();
         for (int i = 0; i < varArgLength; i++) {
             final Object arg = args[mptLength - 1 + i];
             try {
-                Array.set(varArgsArray, i, primitiveOrWrapper
+                // Only primitive parameters require unboxing and widening; wrapper arrays can contain null.
+                Array.set(varArgsArray, i, primitive
                         ? varArgComponentWrappedType.getConstructor(ClassUtils.wrapperToPrimitive(varArgComponentWrappedType)).newInstance(arg)
                         : varArgComponentWrappedType.cast(arg));
             } catch (final InstantiationException e) {

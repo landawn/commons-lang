@@ -57,7 +57,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
  * </p>
  *
  * <ol>
- * <li>{@link #split()}, {@link #suspend()}, or {@link #stop()} cannot be invoked twice</li>
+ * <li>{@link #suspend()} or {@link #stop()} cannot be invoked twice without an intervening state change</li>
  * <li>{@link #unsplit()} may only be called if the watch has been {@link #split()}</li>
  * <li>{@link #resume()} may only be called if the watch has been {@link #suspend()}</li>
  * <li>{@link #start()} cannot be called twice without calling {@link #reset()}</li>
@@ -495,9 +495,9 @@ public class StopWatch {
     }
 
     /**
-     * Gets the Instant this StopWatch was stopped, between the current time and midnight, January 1, 1970 UTC.
+     * Gets the instant most recently recorded by stopping, splitting, or suspending this StopWatch.
      *
-     * @return The Instant this StopWatch was stopped in milliseconds, between the current time and midnight, January 1, 1970 UTC.
+     * @return The most recent stop, split, or suspension instant in this timing session, or {@code null} if none has occurred.
      * @throws IllegalStateException Thrown if this StopWatch has not been started.
      * @since 3.16.0
      */
@@ -623,6 +623,8 @@ public class StopWatch {
     public void reset() {
         runningState = State.UNSTARTED;
         splitState = SplitState.UNSPLIT;
+        startInstant = null;
+        stopInstant = null;
         splits.clear();
     }
 

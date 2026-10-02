@@ -86,7 +86,7 @@ public class ExceptionUtils {
      * </p>
      * <pre>
      *  // There is no throws clause in the method signature.
-     *  public int propagateExample {
+     *  public int propagateExample() {
      *      try {
      *          // Throws IOException
      *          invocation();
@@ -163,11 +163,10 @@ public class ExceptionUtils {
     }
 
     /**
-     * Performs an action for each Throwable causes of the given Throwable.
+     * Performs an action for the given Throwable and each Throwable in its cause chain.
      * <p>
-     * A throwable without cause will return a stream containing one element - the input throwable. A throwable with one cause
-     * will return a stream containing two elements. - the input throwable and the cause throwable. A {@code null} throwable
-     * will return a stream of count zero.
+     * A throwable without a cause invokes the consumer once. A throwable with one cause invokes it twice, first with the input throwable
+     * and then with its cause. A {@code null} throwable does not invoke the consumer.
      * </p>
      *
      * <p>
@@ -909,7 +908,7 @@ public class ExceptionUtils {
     }
 
     /**
-     * Removes common frames from the cause trace given the two stack traces.
+     * Removes the common suffix of frames from the cause trace given the two stack traces.
      *
      * @param causeFrames  stack trace of a cause throwable.
      * @param wrapperFrames  stack trace of a wrapper throwable.
@@ -926,9 +925,11 @@ public class ExceptionUtils {
             // as in the wrapper trace
             final String causeFrame = causeFrames.get(causeFrameIndex);
             final String wrapperFrame = wrapperFrames.get(wrapperFrameIndex);
-            if (causeFrame.equals(wrapperFrame)) {
-                causeFrames.remove(causeFrameIndex);
+            if (!causeFrame.equals(wrapperFrame)) {
+                // Only the shared call-stack suffix can be omitted; earlier equal frames may be recursive calls.
+                break;
             }
+            causeFrames.remove(causeFrameIndex);
             causeFrameIndex--;
             wrapperFrameIndex--;
         }

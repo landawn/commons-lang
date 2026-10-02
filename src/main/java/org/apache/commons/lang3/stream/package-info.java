@@ -20,7 +20,7 @@
  *
  * <p>
  * Contains utilities to allow streaming of failable functional interfaces from the
- * {@code org.apache.commons.lang3.functions} package allowing streaming of functional expressions
+ * {@code org.apache.commons.lang3.function} package allowing streaming of functional expressions
  * that may raise an Exception.
  * </p>
  *

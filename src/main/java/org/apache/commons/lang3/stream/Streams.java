@@ -64,7 +64,7 @@ import org.apache.commons.lang3.function.FailablePredicate;
  * </p>
  *
  * <pre>{@code
- * Streams.failable(stream).forEach(m -> m.invoke(o, args));
+ * Streams.failableStream(stream).forEach(m -> m.invoke(o, args));
  * }</pre>
  * <p>
  * Obviously, the second version is much more concise and the spirit of Lambda expressions is met better than in the first version.
@@ -147,6 +147,7 @@ public class Streams {
 
         @Override
         public void forEachRemaining(final Consumer<? super T> action) {
+            Objects.requireNonNull(action, "action");
             while (enumeration.hasMoreElements()) {
                 next(action);
             }
@@ -160,6 +161,7 @@ public class Streams {
 
         @Override
         public boolean tryAdvance(final Consumer<? super T> action) {
+            Objects.requireNonNull(action, "action");
             return enumeration.hasMoreElements() && next(action);
         }
     }
@@ -592,12 +594,12 @@ public class Streams {
     }
 
     /**
-     * Streams only instances of the give Class in a collection.
+     * Streams only instances of the given Class in a collection.
      * <p>
-     * This method shorthand for:
+     * This method is shorthand for:
      * </p>
      * <pre>
-     * {@code (Stream<E>) Streams.toStream(collection).filter(collection, SomeClass.class::isInstance);}
+     * {@code (Stream<E>) Streams.of(collection).filter(clazz::isInstance);}
      * </pre>
      *
      * @param <E> The type of elements in the collection we want to stream.

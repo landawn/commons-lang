@@ -84,8 +84,8 @@ public class TimeZones {
     /**
      * Returns the given TimeZone if non-{@code null}, otherwise {@link TimeZone#getDefault()}.
      *
-     * @param timeZone A locale or {@code null}.
-     * @return The given locale if non-{@code null}, otherwise {@link TimeZone#getDefault()}.
+     * @param timeZone A time zone or {@code null}.
+     * @return The given time zone if non-{@code null}, otherwise {@link TimeZone#getDefault()}.
      * @since 3.13.0
      */
     public static TimeZone toTimeZone(final TimeZone timeZone) {

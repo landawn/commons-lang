@@ -22,10 +22,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.nio.file.Paths;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 import org.junit.jupiter.api.Test;
@@ -43,6 +46,23 @@ class SystemPropertiesTest extends AbstractLangTest {
     private static final String SIMPLE_NAME = SystemPropertiesTest.class.getSimpleName();
     static final String KEY_SPACE_1 = " ";
     static final String KEY_TAB_1 = "\t";
+
+    @Test
+    void testDefaultSupplierSecurityExceptionIsNotRetried() {
+        final AtomicInteger calls = new AtomicInteger();
+        final SecurityException failure = new SecurityException("supplier failure");
+        assertSame(failure, assertThrows(SecurityException.class, () -> SystemProperties.getProperty("", () -> {
+            calls.incrementAndGet();
+            throw failure;
+        })));
+        assertEquals(1, calls.get());
+    }
+
+    @Test
+    @SetSystemProperty(key = "java.util.logging.SimpleFormatter.format", value = "%5$s%n")
+    void testSimpleFormatterPropertyName() {
+        assertEquals("%5$s%n", SystemProperties.getJavaUtilLoggingSimpleFormatterFormat());
+    }
 
     private void basicKeyCheck(final String key) {
         assertNotNull(key);
@@ -343,7 +363,7 @@ class SystemPropertiesTest extends AbstractLangTest {
         assertEquals("java.util.currency.data", SystemProperties.JAVA_UTIL_CURRENCY_DATA);
         assertEquals("java.util.logging.config.class", SystemProperties.JAVA_UTIL_LOGGING_CONFIG_CLASS);
         assertEquals("java.util.logging.config.file", SystemProperties.JAVA_UTIL_LOGGING_CONFIG_FILE);
-        assertEquals("java.util.logging.simpleformatter.format", SystemProperties.JAVA_UTIL_LOGGING_SIMPLE_FORMATTER_FORMAT);
+        assertEquals("java.util.logging.SimpleFormatter.format", SystemProperties.JAVA_UTIL_LOGGING_SIMPLE_FORMATTER_FORMAT);
         assertEquals("java.util.prefs.PreferencesFactory", SystemProperties.JAVA_UTIL_PREFS_PREFERENCES_FACTORY);
         assertEquals("java.util.PropertyResourceBundle.encoding", SystemProperties.JAVA_UTIL_PROPERTY_RESOURCE_BUNDLE_ENCODING);
         assertEquals("java.vendor", SystemProperties.JAVA_VENDOR);

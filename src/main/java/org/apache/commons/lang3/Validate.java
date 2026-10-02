@@ -19,7 +19,6 @@ package org.apache.commons.lang3;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
@@ -639,7 +638,7 @@ public class Validate {
      * Validate that the specified argument character sequence matches the specified regular
      * expression pattern; otherwise throwing an exception with the specified message.
      *
-     * <pre>Validate.matchesPattern("hi", "[a-z]*", "%s does not match %s", "hi" "[a-z]*");</pre>
+     * <pre>Validate.matchesPattern("hi", "[a-z]*", "%s does not match %s", "hi", "[a-z]*");</pre>
      *
      * <p>
      * The syntax of the pattern is the one used in the {@link Pattern} class.
@@ -716,12 +715,13 @@ public class Validate {
      */
     public static <T extends Iterable<?>> T noNullElements(final T iterable, final String message, final Object... values) {
         Objects.requireNonNull(iterable, "iterable");
-        final AtomicInteger ai = new AtomicInteger();
-        iterable.forEach(e -> {
+        int index = 0;
+        for (final Object e : iterable) {
             if (e == null) {
-                throw new IllegalArgumentException(getMessage(message, ArrayUtils.addAll(values, ai.getAndIncrement())));
+                throw new IllegalArgumentException(getMessage(message, ArrayUtils.addAll(values, index)));
             }
-        });
+            index++;
+        }
         return iterable;
     }
 

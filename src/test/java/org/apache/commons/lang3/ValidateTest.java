@@ -30,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -899,6 +900,13 @@ class ValidateTest extends AbstractLangTest {
                 }
 
                 @Test
+                void shouldAppendNullElementIndexToMessageArguments() {
+                    final IllegalArgumentException ex = assertIllegalArgumentException(
+                        () -> Validate.noNullElements(Arrays.asList("a", "b", null), "%s at %d", "Null"));
+                    assertEquals("Null at 2", ex.getMessage());
+                }
+
+                @Test
                 void shouldThrowNullPointerExceptionWithDefaultMessageForNullCollection() {
                     final NullPointerException ex = assertNullPointerException(() -> Validate.noNullElements((Collection<?>) null, "MSG"));
                     assertEquals("iterable", ex.getMessage());
@@ -924,6 +932,13 @@ class ValidateTest extends AbstractLangTest {
                     final IllegalArgumentException ex = assertIllegalArgumentException(
                         () -> Validate.noNullElements(Collections.singleton(null)));
                     assertEquals("The validated collection contains null element at index: 0", ex.getMessage());
+                }
+
+                @Test
+                void shouldReportNullElementIndexAfterNonNullElements() {
+                    final IllegalArgumentException ex = assertIllegalArgumentException(
+                        () -> Validate.noNullElements(Arrays.asList("a", "b", null, null)));
+                    assertEquals("The validated collection contains null element at index: 2", ex.getMessage());
                 }
 
                 @Test

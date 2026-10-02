@@ -165,7 +165,8 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
         /** {@inheritDoc} */
         @Override
         public long skip(long n) {
-            if (pos + n > size()) {
+            // Compare against the remaining length without overflowing when n is Long.MAX_VALUE.
+            if (n > size() - pos) {
                 n = size() - pos;
             }
             if (n < 0) {
@@ -1487,7 +1488,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
      * all operations with the builder and the reader in one thread.
      * </p>
      * <p>
-     * The returned reader supports marking, and ignores the flush method.
+     * The returned reader supports marking and ignores the close method.
      * </p>
      *
      * @return A reader that reads from this builder.
@@ -1901,7 +1902,7 @@ public class StrBuilder implements CharSequence, Appendable, Serializable, Build
         if (this == other) {
             return true;
         }
-        if (this.size != other.size) {
+        if (other == null || this.size != other.size) {
             return false;
         }
         final char[] thisBuf = this.buffer;

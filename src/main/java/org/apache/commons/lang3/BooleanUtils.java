@@ -19,6 +19,7 @@ package org.apache.commons.lang3;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import org.apache.commons.lang3.math.NumberUtils;
@@ -491,7 +492,7 @@ public class BooleanUtils {
      * Converts a String to a boolean (optimized for performance).
      *
      * <p>
-     * {@code 'true'}, {@code 'on'}, {@code 'y'}, {@code 't'} or {@code 'yes'}
+     * {@code 'true'}, {@code 'on'}, {@code 'y'}, {@code 't'}, {@code 'yes'} or {@code '1'}
      * (case insensitive) will return {@code true}. Otherwise,
      * {@code false} is returned.
      * </p>
@@ -525,6 +526,9 @@ public class BooleanUtils {
 
     /**
      * Converts a String to a Boolean throwing an exception if no match found.
+     * <p>
+     * The true string is checked before the false string. If both strings are equal, a matching input returns {@code true}.
+     * </p>
      *
      * <pre>
      *   BooleanUtils.toBoolean("true", "true", "false")  = true
@@ -538,19 +542,12 @@ public class BooleanUtils {
      * @throws IllegalArgumentException Thrown if the String doesn't match.
      */
     public static boolean toBoolean(final String str, final String trueString, final String falseString) {
-        if (str == trueString) {
+        // Compare values in precedence order; identity shortcuts must not let an equal false string win.
+        if (Objects.equals(str, trueString)) {
             return true;
         }
-        if (str == falseString) {
+        if (Objects.equals(str, falseString)) {
             return false;
-        }
-        if (str != null) {
-            if (str.equals(trueString)) {
-                return true;
-            }
-            if (str.equals(falseString)) {
-                return false;
-            }
         }
         throw new IllegalArgumentException("The String did not match either specified value");
     }

@@ -106,7 +106,7 @@ import org.apache.commons.lang3.tuple.Pair;
 public class EqualsBuilder extends AbstractReflection implements Builder<Boolean> {
 
     /**
-     * Builds instances of CompareToBuilder.
+     * Builds instances of EqualsBuilder.
      */
     public static class Builder extends AbstractBuilder<Builder> {
 
@@ -436,14 +436,14 @@ public class EqualsBuilder extends AbstractReflection implements Builder<Boolean
      * @see Object#equals(Object)
      */
     public EqualsBuilder() {
-        super(builder());
-        // set up default classes to bypass reflection for
-        bypassReflectionClasses = new ArrayList<>(1);
-        bypassReflectionClasses.add(String.class); //hashCode field being lazy but not transient
+        this(builder());
     }
 
     private EqualsBuilder(final Builder builder) {
         super(builder);
+        // set up default classes to bypass reflection for
+        bypassReflectionClasses = new ArrayList<>(1);
+        bypassReflectionClasses.add(String.class); //hashCode field being lazy but not transient
     }
 
     /**
@@ -619,7 +619,7 @@ public class EqualsBuilder extends AbstractReflection implements Builder<Boolean
 
     /**
      * Test if two {@code float}s are equal by testing that the
-     * pattern of bits returned by doubleToLong are equal.
+     * pattern of bits returned by {@link Float#floatToIntBits(float)} are equal.
      *
      * <p>
      * This handles NaNs, Infinities, and {@code -0.0}.
@@ -750,11 +750,9 @@ public class EqualsBuilder extends AbstractReflection implements Builder<Boolean
     }
 
     /**
-     * Test if two {@link Object}s are equal using either
-     * #{@link #reflectionAppend(Object, Object)}, if object are non
-     * primitives (or wrapper of primitives) or if field {@code testRecursive}
-     * is set to {@code false}. Otherwise, using their
-     * {@code equals} method.
+     * Tests if two {@link Object}s are equal. Arrays are compared deeply. Other objects use
+     * {@link #reflectionAppend(Object, Object)} when {@code testRecursive} is true and the objects are not
+     * primitive wrappers; otherwise their {@code equals} method is used.
      *
      * @param lhs  The left-hand side object
      * @param rhs  The right-hand side object

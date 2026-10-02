@@ -81,10 +81,10 @@ public interface FailableIntPredicate<E extends Throwable> {
     }
 
     /**
-     * Returns a composed {@link FailableIntPredicate} like {@link IntPredicate#and(IntPredicate)}.
+     * Returns a composed {@link FailableIntPredicate} like {@link IntPredicate#or(IntPredicate)}.
      *
      * @param other A predicate that will be logically-ORed with this predicate.
-     * @return A composed {@link FailableIntPredicate} like {@link IntPredicate#and(IntPredicate)}.
+     * @return A composed {@link FailableIntPredicate} like {@link IntPredicate#or(IntPredicate)}.
      * @throws NullPointerException Thrown if other is null.
      */
     default FailableIntPredicate<E> or(final FailableIntPredicate<E> other) {

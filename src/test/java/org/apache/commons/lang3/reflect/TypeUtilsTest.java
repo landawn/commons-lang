@@ -218,6 +218,50 @@ class TwoParams<T extends TwoParams<T, U>, U> {
 // raw types, where used, are used purposely
 class TypeUtilsTest<B> extends AbstractLangTest {
 
+    @Test
+    void testConstructedTypesAsReflectionMapKeys() {
+        final Type reflected = new TypeLiteral<List<String>>() { }.getType();
+        final Type constructed = TypeUtils.parameterize(List.class, String.class);
+        assertEquals(reflected, constructed);
+        assertEquals(constructed, reflected);
+        assertEquals(reflected.hashCode(), constructed.hashCode());
+        assertTrue(Collections.singletonMap(reflected, "value").containsKey(constructed));
+        final Map<Type, String> types = new HashMap<>();
+        types.put(reflected, "value");
+        assertEquals("value", types.get(constructed));
+
+        final Type reflectedArray = new TypeLiteral<List<String>[]>() { }.getType();
+        final Type constructedArray = TypeUtils.genericArrayType(constructed);
+        assertEquals(reflectedArray, constructedArray);
+        assertEquals(constructedArray, reflectedArray);
+        assertEquals(reflectedArray.hashCode(), constructedArray.hashCode());
+        types.put(reflectedArray, "array");
+        assertEquals("array", types.get(constructedArray));
+    }
+
+    @Test
+    void testGenericArrayMarkerInterfaces() {
+        final Type array = new TypeLiteral<List<String>[]>() { }.getType();
+        assertTrue(TypeUtils.isAssignable(array, Cloneable.class));
+        assertTrue(TypeUtils.isAssignable(array, Serializable.class));
+        assertFalse(TypeUtils.isAssignable(array, Runnable.class));
+    }
+
+    @Test
+    void testNormalizeEqualDistinctBounds() {
+        final Type first = TypeUtils.parameterize(List.class, String.class);
+        final Type second = TypeUtils.parameterize(List.class, String.class);
+        assertArrayEquals(new Type[] { first }, TypeUtils.normalizeUpperBounds(new Type[] { first, second }));
+    }
+
+    @Test
+    void testUnrollRepeatedVariable() {
+        final TypeVariable<?> variable = TypeUtilsTest.class.getTypeParameters()[0];
+        final Type repeated = TypeUtils.parameterize(Map.class, variable, variable);
+        assertEquals(TypeUtils.parameterize(Map.class, String.class, String.class),
+                TypeUtils.unrollVariables(Collections.singletonMap(variable, String.class), repeated));
+    }
+
     public interface And<K, V> extends This<Number, Number> {
         // empty
     }

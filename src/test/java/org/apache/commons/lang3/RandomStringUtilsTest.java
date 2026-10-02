@@ -45,6 +45,13 @@ import org.junit.jupiter.params.provider.ValueSource;
  */
 class RandomStringUtilsTest extends AbstractLangTest {
 
+    @Test
+    void testNegativeCountMessage() {
+        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> RandomStringUtils.random(-7, 32, 127, false, false, null, new Random()));
+        assertEquals("Requested random string length -7 is less than 0.", exception.getMessage());
+    }
+
     private static final int LOOP_COUNT = 1_000;
 
     /** Characters generated per iteration when checking that a documented range boundary is reachable. */

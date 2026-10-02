@@ -192,8 +192,8 @@ public abstract class Triple<L, M, R> implements Comparable<Triple<L, M, R>>, Se
      * Formats the receiver using the given format.
      *
      * <p>
-     * This uses {@link java.util.Formattable} to perform the formatting. Three variables may
-     * be used to embed the left and right elements. Use {@code %1$s} for the left
+     * This uses {@link String#format(String, Object...)} to perform the formatting. Three variables may
+     * be used to embed the left, middle, and right elements. Use {@code %1$s} for the left
      * element, {@code %2$s} for the middle and {@code %3$s} for the right element.
      * The default format used by {@code toString()} is {@code (%1$s,%2$s,%3$s)}.
      * </p>

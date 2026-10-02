@@ -84,6 +84,7 @@ class StringUtilsAbbreviateTest extends AbstractLangTest {
         assertEquals("raspberry peach", StringUtils.abbreviate(raspberry, 11, 15));
         assertNull(StringUtils.abbreviate(null, 7, 14));
         assertAbbreviateWithOffset("abcdefg...", -1, 10);
+        assertAbbreviateWithOffset("abcdefg...", Integer.MIN_VALUE, 10);
         assertAbbreviateWithOffset("abcdefg...", 0, 10);
         assertAbbreviateWithOffset("abcdefg...", 1, 10);
         assertAbbreviateWithOffset("abcdefg...", 2, 10);
@@ -147,6 +148,8 @@ class StringUtilsAbbreviateTest extends AbstractLangTest {
         assertEquals("raspberry peach", StringUtils.abbreviate(raspberry, "--", 12, 15));
         assertNull(StringUtils.abbreviate(null, ";", 7, 14));
         assertAbbreviateWithAbbrevMarkerAndOffset("abcdefgh;;", ";;", -1, 10);
+        assertAbbreviateWithAbbrevMarkerAndOffset("abcdefgh;;", ";;", Integer.MIN_VALUE, 10);
+        assertAbbreviateWithAbbrevMarkerAndOffset("abcdefghij", null, Integer.MIN_VALUE, 10);
         assertAbbreviateWithAbbrevMarkerAndOffset("abcdefghi.", ".", 0, 10);
         assertAbbreviateWithAbbrevMarkerAndOffset("abcdefgh++", "++", 1, 10);
         assertAbbreviateWithAbbrevMarkerAndOffset("abcdefghi*", "*", 2, 10);

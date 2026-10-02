@@ -79,7 +79,7 @@ public class Conversion {
     private static final boolean[] FFFF = { false, false, false, false };
 
     /**
-     * Converts the first 4 bits of a binary (represented as boolean array) in big-endian MSB0 bit ordering to a hexadecimal digit.
+     * Converts the last 4 bits of a binary (represented as boolean array) in big-endian MSB0 bit ordering to a hexadecimal digit.
      *
      * <p>
      * (1, 0, 0, 0) is converted as follow: '8' (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0) is converted to '4'.
@@ -973,7 +973,7 @@ public class Conversion {
      * 1 returns '1'
      * </p>
      * <p>
-     * 10 returns 'A' and so on...
+     * 10 returns 'a' and so on...
      * </p>
      *
      * @param nibble The 4 bits to convert.

@@ -60,10 +60,9 @@ import java.util.function.Supplier;
  * that may be a better choice for applications with more stringent requirements (performance and/or correctness).
  * </p>
  * <p>
- * Note that <em>private high surrogate</em> characters are ignored. These are Unicode characters that fall between the values 56192 (db80) and 56319 (dbff) as
- * we don't know how to handle them. High and low surrogates are correctly dealt with - that is if a high surrogate is randomly chosen, 55296 (d800) to 56191
- * (db7f) then it is followed by a low surrogate. If a low surrogate is chosen, 56320 (dc00) to 57343 (dfff) then it is placed after a randomly chosen high
- * surrogate.
+ * When no character array or string is supplied, unassigned, private-use, and surrogate code points are excluded. Supplementary code points are emitted as
+ * surrogate pairs, and the requested length is measured in UTF-16 code units. When a character array or string is supplied, its individual UTF-16 code
+ * units are sampled directly, so callers are responsible for excluding isolated surrogates if well-formed Unicode is required.
  * </p>
  * <p>
  * #ThreadSafe#
@@ -258,7 +257,7 @@ public class RandomStringUtils {
             return StringUtils.EMPTY;
         }
         if (count < 0) {
-            throw new IllegalArgumentException(String.format("Requested random string length %,d is less than 0.", end));
+            throw new IllegalArgumentException(String.format("Requested random string length %,d is less than 0.", count));
         }
         if (chars != null && chars.length == 0) {
             throw new IllegalArgumentException("The chars array must not be empty");

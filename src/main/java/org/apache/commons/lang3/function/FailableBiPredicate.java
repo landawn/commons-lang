@@ -87,10 +87,10 @@ public interface FailableBiPredicate<T, U, E extends Throwable> {
     }
 
     /**
-     * Returns a composed {@link FailableBiPredicate} like {@link BiPredicate#and(BiPredicate)}.
+     * Returns a composed {@link FailableBiPredicate} like {@link BiPredicate#or(BiPredicate)}.
      *
      * @param other A predicate that will be logically-ORed with this predicate.
-     * @return A composed {@link FailableBiPredicate} like {@link BiPredicate#and(BiPredicate)}.
+     * @return A composed {@link FailableBiPredicate} like {@link BiPredicate#or(BiPredicate)}.
      * @throws NullPointerException Thrown if other is null.
      */
     default FailableBiPredicate<T, U, E> or(final FailableBiPredicate<? super T, ? super U, E> other) {

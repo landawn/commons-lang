@@ -132,7 +132,7 @@ public abstract class AbstractConcurrentInitializer<T, E extends Exception> impl
     }
 
     /**
-     * Calls the closer with the manager object.
+     * Calls the closer with the managed object if initialization completed successfully.
      *
      * @throws ConcurrentException Thrown by the closer.
      * @since 3.14.0

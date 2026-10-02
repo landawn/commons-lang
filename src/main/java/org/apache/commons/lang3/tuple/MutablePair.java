@@ -182,7 +182,7 @@ public class MutablePair<L, R> extends Pair<L, R> {
      * Sets the {@code Map.Entry} value.
      * This sets the right element of the pair.
      *
-     * @param value  The right value to set, not null.
+     * @param value  The right value to set, may be null.
      * @return The old value for the right element.
      */
     @Override

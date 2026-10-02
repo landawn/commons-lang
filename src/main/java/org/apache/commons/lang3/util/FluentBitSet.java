@@ -517,6 +517,9 @@ public final class FluentBitSet implements Cloneable, Serializable {
      * @return {@code this} instance.
      */
     public FluentBitSet setInclusive(final int fromIndex, final int toIndex) {
+        if (fromIndex < 0 || toIndex < fromIndex) {
+            throw new IndexOutOfBoundsException("Invalid inclusive range: " + fromIndex + " to " + toIndex);
+        }
         if (toIndex == Integer.MAX_VALUE) {
             // toIndex + 1 would overflow to Integer.MIN_VALUE.
             bitSet.set(fromIndex, toIndex);
@@ -574,7 +577,7 @@ public final class FluentBitSet implements Cloneable, Serializable {
     }
 
     /**
-     * Returns a new byte array containing all the bits in this bit set.
+     * Returns a new long array containing all the bits in this bit set.
      *
      * <p>
      * More precisely, if:
@@ -586,7 +589,7 @@ public final class FluentBitSet implements Cloneable, Serializable {
      * <li>for all {@code n < 64 * longs.length}.</li>
      * </ol>
      *
-     * @return A byte array containing a little-endian representation of all the bits in this bit set
+     * @return A long array containing a little-endian representation of all the bits in this bit set.
      */
     public long[] toLongArray() {
         return bitSet.toLongArray();

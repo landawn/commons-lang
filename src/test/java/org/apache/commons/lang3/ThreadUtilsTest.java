@@ -49,6 +49,12 @@ import org.junit.jupiter.api.Test;
  */
 class ThreadUtilsTest extends AbstractLangTest {
 
+    @Test
+    void testNullThreadNameInEmptyGroup() {
+        final ThreadGroup group = new ThreadGroup("empty-name-validation");
+        assertNullPointerException(() -> ThreadUtils.findThreadsByName(null, group));
+    }
+
     private static final class TestThread extends Thread {
         private final CountDownLatch latch = new CountDownLatch(1);
 

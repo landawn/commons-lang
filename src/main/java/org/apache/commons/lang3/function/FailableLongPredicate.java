@@ -81,10 +81,10 @@ public interface FailableLongPredicate<E extends Throwable> {
     }
 
     /**
-     * Returns a composed {@link FailableLongPredicate} like {@link LongPredicate#and(LongPredicate)}.
+     * Returns a composed {@link FailableLongPredicate} like {@link LongPredicate#or(LongPredicate)}.
      *
      * @param other A predicate that will be logically-ORed with this predicate.
-     * @return A composed {@link FailableLongPredicate} like {@link LongPredicate#and(LongPredicate)}.
+     * @return A composed {@link FailableLongPredicate} like {@link LongPredicate#or(LongPredicate)}.
      * @throws NullPointerException Thrown if other is null.
      */
     default FailableLongPredicate<E> or(final FailableLongPredicate<E> other) {

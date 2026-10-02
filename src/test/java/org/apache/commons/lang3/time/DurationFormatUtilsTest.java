@@ -125,6 +125,22 @@ class DurationFormatUtilsTest extends AbstractLangTest {
     }
 
     @Test
+    void testLiteralTokensHaveEqualHashCodes() {
+        final Token first = createTokenWithCount(new StringBuilder(":"), 1);
+        final Token second = createTokenWithCount(new StringBuilder(":"), 1);
+        assertEquals(first, second);
+        assertEquals(first.hashCode(), second.hashCode());
+    }
+
+    @Test
+    void testLiteralAcrossOptionalBoundary() {
+        assertEquals(":", DurationFormatUtils.formatDuration(0, ":[-H]"));
+        assertEquals("-", DurationFormatUtils.formatDuration(0, "[H:]-"));
+        assertEquals(":-1", DurationFormatUtils.formatDuration(DateUtils.MILLIS_PER_HOUR, ":[-H]"));
+        assertEquals("1:-", DurationFormatUtils.formatDuration(DateUtils.MILLIS_PER_HOUR, "[H:]-"));
+    }
+
+    @Test
     void testAlternatingLiteralOptionals() {
         final String format = "['d'dH'h'][m'm']['s's]['ms'S]";
         assertEquals("d1", DurationFormatUtils.formatDuration(Duration.ofDays(1).toMillis(), format));

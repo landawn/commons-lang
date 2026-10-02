@@ -131,7 +131,7 @@
  * {@link org.apache.commons.lang3.concurrent.AtomicInitializer}; it also uses atomic variables internally and therefore
  * does not need synchronization. The name &quot;Safe&quot; is derived from the fact that it implements an additional
  * check which guarantees that the {@link org.apache.commons.lang3.concurrent.AtomicSafeInitializer#initialize()
- * initialize()} method is called only once. So it behaves exactly in the same way as
+ * initialize()} method is called at most once at a time and is not called again after success. Failed initialization can be retried, as with
  * {@link org.apache.commons.lang3.concurrent.LazyInitializer}.
  * </p>
  *
@@ -150,7 +150,7 @@
  * {@link org.apache.commons.lang3.concurrent.AtomicInitializer} is a good choice.
  * {@link org.apache.commons.lang3.concurrent.AtomicSafeInitializer} and
  * {@link org.apache.commons.lang3.concurrent.LazyInitializer} both guarantee that the initialization method is called
- * only once. Because {@link org.apache.commons.lang3.concurrent.AtomicSafeInitializer} does not use synchronization it
+ * at most once at a time and never again after success. Because {@link org.apache.commons.lang3.concurrent.AtomicSafeInitializer} does not use synchronization it
  * is probably slightly more efficient than {@link org.apache.commons.lang3.concurrent.LazyInitializer}, but the
  * concrete numbers might depend on the level of concurrency.
  * </p>
@@ -374,8 +374,8 @@
  * the developer usually does not have to care about creating threads; the executors create the threads they need on
  * demand. However, sometimes it is desired to set some properties of the newly created worker threads. This is possible
  * through the {@link java.util.concurrent.ThreadFactory} interface; an implementation of this interface has to be
- * created and passed to an executor on creation time. Currently, the JDK does not provide an implementation of
- * {@link java.util.concurrent.ThreadFactory}, so one has to start from scratch.
+ * created and passed to an executor on creation time. The JDK provides {@link java.util.concurrent.Executors#defaultThreadFactory()},
+ * which can be wrapped to customize the threads it creates.
  * </p>
  *
  * <p>
@@ -425,7 +425,7 @@
  * {@link org.apache.commons.lang3.concurrent.TimedSemaphore#acquire()} method. The semaphore keeps track about the
  * number of granted permits in the current time frame. Only 10 calls are allowed; if there are further callers, they
  * are blocked until the time frame (one second in this example) is over. Then all blocking threads are released, and
- * the counter of available permits is reset to 0. So the game can start anew.
+ * the counter of acquired permits is reset to 0. So the game can start anew.
  * </p>
  *
  * <p>

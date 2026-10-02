@@ -35,6 +35,16 @@ import org.junit.jupiter.params.provider.CsvSource;
  */
 class FractionTest extends AbstractLangTest {
 
+    @Test
+    void testDivideByMinimumNumerator() {
+        final Fraction minimum = Fraction.getFraction(Integer.MIN_VALUE, 1);
+        assertEquals(Fraction.ONE, minimum.divideBy(minimum));
+        assertEquals(Fraction.ZERO, Fraction.ZERO.divideBy(minimum));
+        assertEquals(Fraction.getFraction(-1, 1 << 30), Fraction.getFraction(2, 1).divideBy(minimum));
+        assertEquals(Fraction.getFraction(-1, 1 << 30), Fraction.ONE.divideBy(Fraction.getFraction(Integer.MIN_VALUE, 2)));
+        assertThrows(ArithmeticException.class, () -> Fraction.ONE.divideBy(minimum));
+    }
+
     private static final int SKIP = 500; // 53
 
     @Test

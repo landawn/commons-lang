@@ -175,7 +175,7 @@ public final class LangCollectors {
      * @param delimiter The delimiter to be used between each element
      * @param prefix The sequence of characters to be used at the beginning of the joined result
      * @param suffix The sequence of characters to be used at the end of the joined result
-     * @return A {@code Collector} which concatenates CharSequence elements, separated by the specified delimiter, in
+     * @return A {@code Collector} which concatenates Object elements, separated by the specified delimiter, in
      *         encounter order
      */
     public static Collector<Object, ?, String> joining(final CharSequence delimiter, final CharSequence prefix, final CharSequence suffix) {
@@ -203,7 +203,7 @@ public final class LangCollectors {
      * @param prefix    The sequence of characters to be used at the beginning of the joined result
      * @param suffix    The sequence of characters to be used at the end of the joined result
      * @param toString  A function that takes an Object and returns a non-null String.
-     * @return A {@code Collector} which concatenates CharSequence elements, separated by the specified delimiter, in encounter order
+     * @return A {@code Collector} which concatenates Object elements, separated by the specified delimiter, in encounter order
      */
     public static Collector<Object, ?, String> joining(final CharSequence delimiter, final CharSequence prefix, final CharSequence suffix,
         final Function<Object, String> toString) {

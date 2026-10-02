@@ -342,7 +342,7 @@ public class EnumUtils {
      * This method differs from {@link Enum#valueOf} in that it does not throw an exception for an invalid enum name.
      * </p>
      * <p>
-     * If a {@link SecurityException} is caught, the return value is {@code null}.
+     * If a {@link SecurityException} is caught, the return value is {@code defaultEnum}.
      * </p>
      *
      * @param <E>         the type of the enumeration.
@@ -357,16 +357,15 @@ public class EnumUtils {
     }
 
     /**
-     * Gets the enum for the class and value, returning {@code defaultEnum} if not found.
+     * Gets the first enum whose extracted integer equals {@code value}, returning {@code defaultEnum} if not found.
      *
      * <p>
-     * This method differs from {@link Enum#valueOf} in that it does not throw an exception for an invalid enum name and performs case insensitive matching of
-     * the name.
+     * Constants are tested in their declaration order. A null or non-enum class returns {@code defaultEnum}.
      * </p>
      *
      * @param <E>           the type of the enumeration.
      * @param enumClass     The class of the enum to query, not null.
-     * @param value         The enum name, null returns default enum.
+     * @param value         The integer value to match.
      * @param toIntFunction The function that gets an int for an enum for comparison to {@code value}.
      * @param defaultEnum   The default enum.
      * @return An enum, default enum if not found.

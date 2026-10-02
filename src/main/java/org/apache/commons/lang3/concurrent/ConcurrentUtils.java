@@ -103,7 +103,7 @@ public class ConcurrentUtils {
      * not, an exception is thrown.
      *
      * @param ex The {@link Throwable} to check
-     * @return A flag whether the passed in exception is a checked exception
+     * @return The given checked throwable.
      * @throws IllegalArgumentException Thrown if the {@link Throwable} is not a checked exception.
      */
     static Throwable checkedException(final Throwable ex) {
@@ -166,7 +166,7 @@ public class ConcurrentUtils {
      * Checks if a concurrent map contains a key and creates a corresponding
      * value if not, suppressing checked exceptions. This method calls
      * {@code createIfAbsent()}. If a {@link ConcurrentException} is thrown, it
-     * is caught and re-thrown as a {@link ConcurrentRuntimeException}.
+     * is caught and re-thrown as a {@link ConcurrentRuntimeException}. If it has no cause, the checked exception itself is wrapped.
      *
      * @param <K> The type of the keys of the map
      * @param <V> The type of the values of the map
@@ -182,7 +182,7 @@ public class ConcurrentUtils {
         try {
             return createIfAbsent(map, key, init);
         } catch (final ConcurrentException cex) {
-            throw new ConcurrentRuntimeException(cex.getCause());
+            throw new ConcurrentRuntimeException(cex.getCause() != null ? cex.getCause() : cex);
         }
     }
 
@@ -292,7 +292,7 @@ public class ConcurrentUtils {
      * occurring exceptions to runtime exceptions. This method works like
      * {@link #initialize(ConcurrentInitializer)}, but if the {@code
      * ConcurrentInitializer} throws a {@link ConcurrentException}, it is
-     * caught, and the cause is wrapped in a {@link ConcurrentRuntimeException}.
+     * caught, and the cause is wrapped in a {@link ConcurrentRuntimeException}. If it has no cause, the checked exception itself is wrapped.
      * So client code does not have to deal with checked exceptions.
      *
      * @param <T> The type of the object produced by the initializer
@@ -304,7 +304,7 @@ public class ConcurrentUtils {
         try {
             return initialize(initializer);
         } catch (final ConcurrentException cex) {
-            throw new ConcurrentRuntimeException(cex.getCause());
+            throw new ConcurrentRuntimeException(cex.getCause() != null ? cex.getCause() : cex);
         }
     }
 

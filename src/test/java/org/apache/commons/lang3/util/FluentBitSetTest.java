@@ -42,6 +42,14 @@ import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
  */
 class FluentBitSetTest extends AbstractLangTest {
 
+    @Test
+    void testSetInclusiveRejectsEmptyRanges() {
+        final FluentBitSet bits = new FluentBitSet().set(3);
+        assertIndexOutOfBoundsException(() -> bits.setInclusive(0, -1));
+        assertIndexOutOfBoundsException(() -> bits.setInclusive(2, 1));
+        assertEquals(new FluentBitSet().set(3), bits);
+    }
+
     private BitSet eightBs;
     private FluentBitSet eightFbs;
 

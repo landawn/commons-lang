@@ -61,7 +61,7 @@ import org.apache.commons.lang3.Validate;
  *                 semaphore.acquire();   // limit database load
  *                 performQuery();        // issue a query
  *             }
- *         } catch (InterruptedException) {
+ *         } catch (InterruptedException ex) {
  *             // fall through
  *         }
  *     }
@@ -74,7 +74,7 @@ import org.apache.commons.lang3.Validate;
  * </p>
  *
  * <pre>
- * TimedSemaphore sem = new TimedSemaphore(1, TimeUnit.SECOND, 10);
+ * TimedSemaphore sem = TimedSemaphore.builder().setPeriod(1).setTimeUnit(TimeUnit.SECONDS).setLimit(10).get();
  * StatisticsThread thread = new StatisticsThread(sem);
  * thread.start();
  * </pre>
@@ -104,7 +104,7 @@ import org.apache.commons.lang3.Validate;
  * </p>
  * <p>
  * When the {@link TimedSemaphore} is no more needed its {@link #shutdown()} method should be called. This causes the periodic task that monitors the time
- * interval to be canceled. If the {@link ScheduledExecutorService} has been created by the semaphore at construction time, it is also shut down. resources.
+ * interval to be canceled. If the {@link ScheduledExecutorService} has been created by the semaphore at construction time, it is also shut down.
  * After that {@link #acquire()} must not be called any more.
  * </p>
  *
@@ -434,7 +434,7 @@ public class TimedSemaphore {
     /**
      * Sets the limit. This is the number of times the {@link #acquire()} method can be called within the time period specified. If this limit is reached,
      * further invocations of {@link #acquire()} will block. Setting the limit to a value &lt;= {@link #NO_LIMIT} will cause the limit to be disabled, i.e. an
-     * arbitrary number of{@link #acquire()} invocations is allowed in the time period.
+     * arbitrary number of {@link #acquire()} invocations is allowed in the time period.
      *
      * @param limit The limit.
      */

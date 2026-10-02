@@ -453,7 +453,8 @@ public abstract class Strings {
      * </pre>
      *
      * <p>
-     * {@code null} value is considered less than non-{@code null} value. Two {@code null} references are considered equal.
+     * The {@link #CS} and {@link #CI} instances consider {@code null} less than a non-{@code null} value. Instances created with
+     * {@link Builder#setNullIsLess(boolean)} use the configured ordering. Two {@code null} references are considered equal.
      * </p>
      *
      * <p>
@@ -610,7 +611,7 @@ public abstract class Strings {
      *
      * @param str    The CharSequence to check, may be null.
      * @param suffix The suffix to find, may be null.
-     * @return {@code true} if the CharSequence starts with the prefix or both {@code null}.
+     * @return {@code true} if the CharSequence ends with the suffix or both {@code null}.
      * @see String#endsWith(String)
      */
     public boolean endsWith(final CharSequence str, final CharSequence suffix) {
@@ -645,8 +646,8 @@ public abstract class Strings {
      * @param sequence      The CharSequence to check, may be null
      * @param searchStrings The CharSequence suffixes to find, may be empty or contain {@code null}
      * @see Strings#endsWith(CharSequence, CharSequence)
-     * @return {@code true} if the input {@code sequence} is {@code null} AND no {@code searchStrings} are provided, or the input {@code sequence} ends in any
-     *         of the provided {@code searchStrings}.
+     * @return {@code true} if the nonempty input {@code sequence} ends with any of the provided {@code searchStrings};
+     *         {@code false} if the sequence or search array is null or empty.
      */
     public boolean endsWithAny(final CharSequence sequence, final CharSequence... searchStrings) {
         if (StringUtils.isEmpty(sequence) || ArrayUtils.isEmpty(searchStrings)) {
@@ -873,14 +874,14 @@ public abstract class Strings {
      * @param seq       The CharSequence to check, may be null
      * @param searchSeq The CharSequence to find, may be null
      * @param startPos  The start position, negative treated as zero
-     * @return The first index of the search CharSequence (always &ge; startPos), -1 if no match or {@code null} string input
+     * @return The first index of the search CharSequence, -1 if no match or {@code null} string input
      */
     public abstract int indexOf(CharSequence seq, CharSequence searchSeq, int startPos);
 
     /**
-     * Tests whether to ignore case.
+     * Tests whether comparisons are case-sensitive.
      *
-     * @return whether to ignore case.
+     * @return whether comparisons are case-sensitive.
      */
     public boolean isCaseSensitive() {
         return !ignoreCase;
@@ -983,7 +984,7 @@ public abstract class Strings {
      *
      * @param seq       The CharSequence to check, may be null
      * @param searchSeq The CharSequence to find, may be null
-     * @param startPos  The start position, negative treated as zero
+     * @param startPos  The start position, negative returns -1
      * @return The last index of the search CharSequence (always &le; startPos), -1 if no match or {@code null} string input
      */
     public abstract int lastIndexOf(CharSequence seq, CharSequence searchSeq, int startPos);
@@ -1460,8 +1461,8 @@ public abstract class Strings {
      * @param sequence      The CharSequence to check, may be null
      * @param searchStrings The CharSequence prefixes, may be empty or contain {@code null}
      * @see Strings#startsWith(CharSequence, CharSequence)
-     * @return {@code true} if the input {@code sequence} is {@code null} AND no {@code searchStrings} are provided, or the input {@code sequence} begins with
-     *         any of the provided {@code searchStrings}.
+     * @return {@code true} if the nonempty input {@code sequence} starts with any of the provided {@code searchStrings};
+     *         {@code false} if the sequence or search array is null or empty.
      */
     public boolean startsWithAny(final CharSequence sequence, final CharSequence... searchStrings) {
         if (StringUtils.isEmpty(sequence) || ArrayUtils.isEmpty(searchStrings)) {

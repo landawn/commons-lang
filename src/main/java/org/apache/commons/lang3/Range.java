@@ -549,7 +549,7 @@ public class Range<T> implements Serializable {
      * Tests whether this range ends with the specified element.
      *
      * @param element  The element to check for, null returns false.
-     * @return true if the specified element occurs within this range.
+     * @return true if the specified element compares equal to this range's maximum.
      */
     public boolean isEndedBy(final T element) {
         if (element == null) {
@@ -601,7 +601,7 @@ public class Range<T> implements Serializable {
      * Tests whether this range starts with the specified element.
      *
      * @param element  The element to check for, null returns false.
-     * @return true if the specified element occurs within this range.
+     * @return true if the specified element compares equal to this range's minimum.
      */
     public boolean isStartedBy(final T element) {
         if (element == null) {

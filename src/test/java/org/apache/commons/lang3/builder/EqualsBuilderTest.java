@@ -39,6 +39,15 @@ import org.junit.jupiter.api.Test;
  */
 class EqualsBuilderTest extends AbstractBuilderTest {
 
+    @Test
+    void testBuilderRetainsDefaultStringBypass() {
+        final String left = new String(new char[] { 'v', 'a', 'l', 'u', 'e' });
+        final String right = new String(new char[] { 'v', 'a', 'l', 'u', 'e' });
+        left.hashCode();
+        assertTrue(EqualsBuilder.builder().get().setTestRecursive(true).append(left, right).isEquals());
+        assertFalse(EqualsBuilder.builder().get().setTestRecursive(true).append(left, "other").isEquals());
+    }
+
     public static class TestACanEqualB {
         private final int a;
 

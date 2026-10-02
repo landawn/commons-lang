@@ -118,7 +118,7 @@ public class DiffBuilder<T> implements Builder<DiffResult<T>> {
         /**
          * Sets the right object.
          *
-         * @param right The left object.
+         * @param right The right object.
          * @return {@code this} instance.
          */
         public Builder<T> setRight(final T right) {
@@ -529,7 +529,9 @@ public class DiffBuilder<T> implements Builder<DiffResult<T>> {
         }
         // rhs cannot be null, as lhs != rhs
         final Object test = lhs != null ? lhs : rhs;
-        if (ObjectUtils.isArray(test)) {
+        // Dispatch only when both values can be cast to the same array kind. Different kinds are a difference, too.
+        if (ObjectUtils.isArray(test) && (lhs == null || rhs == null || lhs.getClass() == rhs.getClass()
+                || lhs instanceof Object[] && rhs instanceof Object[])) {
             if (test instanceof boolean[]) {
                 return append(fieldName, (boolean[]) lhs, (boolean[]) rhs);
             }

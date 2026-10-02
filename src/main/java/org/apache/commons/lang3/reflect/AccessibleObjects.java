@@ -25,10 +25,10 @@ import java.lang.reflect.AccessibleObject;
 class AccessibleObjects {
 
     /**
-     * Tests whether {@code accessibleObject} is non-null and {@link AccessibleObject#isAccessible()} returns true.
+     * Tests whether {@code accessibleObject} is null or {@link AccessibleObject#isAccessible()} returns true.
      *
      * @param accessibleObject The accessible object.
-     * @return The value of the object's {@code accessible} flag
+     * @return {@code true} for null input, otherwise the value of the object's {@code accessible} flag.
      */
     static boolean isAccessible(final AccessibleObject accessibleObject) {
         return accessibleObject == null || accessibleObject.isAccessible();

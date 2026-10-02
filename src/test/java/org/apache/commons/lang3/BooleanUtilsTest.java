@@ -42,6 +42,16 @@ import org.junit.jupiter.api.Test;
 class BooleanUtilsTest extends AbstractLangTest {
 
     @Test
+    void testToBooleanEqualStringsUseTruePrecedence() {
+        final String trueString = new String("same");
+        final String falseString = new String("same");
+        assertTrue(BooleanUtils.toBoolean(trueString, trueString, falseString));
+        assertTrue(BooleanUtils.toBoolean(falseString, trueString, falseString));
+        assertTrue(BooleanUtils.toBoolean(new String("same"), trueString, falseString));
+        assertTrue(BooleanUtils.toBoolean((String) null, null, null));
+    }
+
+    @Test
     void test_booleanValues() {
         final Boolean[] expected = {Boolean.FALSE, Boolean.TRUE};
         assertArrayEquals(sort(expected), BooleanUtils.booleanValues());

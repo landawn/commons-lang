@@ -114,7 +114,7 @@ public class AutoCloseables {
      * </p>
      *
      * <pre>
-     * AutoCloseable autoCloseable = ...;
+     * Closeable autoCloseable = ...;
      * try {
      *     // process autoCloseable.
      * } catch (Exception e) {
@@ -128,7 +128,7 @@ public class AutoCloseables {
      *
      * @param <T>       The Throwable type.
      * @param closeable The object to close, may be null or already closed.
-     * @param throwable Add the exception throw by the closeable to the given Throwable.
+     * @param throwable Add the exception thrown by the closeable to the given Throwable.
      * @return The given Throwable.
      * @see Throwable#addSuppressed(Throwable)
      */

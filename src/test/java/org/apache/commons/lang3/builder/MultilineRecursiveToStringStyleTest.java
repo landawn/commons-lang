@@ -18,8 +18,10 @@
 package org.apache.commons.lang3.builder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -27,6 +29,13 @@ import org.junit.jupiter.api.Test;
 /**
  */
 class MultilineRecursiveToStringStyleTest extends AbstractBuilderTest {
+
+    @Test
+    void testMapNullEntries() {
+        final String result = new ToStringBuilder(new Object(), new MultilineRecursiveToStringStyle())
+                .append("map", Collections.singletonMap(null, null)).toString();
+        assertTrue(result.contains("map={<null>=<null>}"));
+    }
 
     static class Account {
         Customer owner;

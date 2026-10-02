@@ -37,6 +37,21 @@ import org.junit.jupiter.api.Test;
  */
 class BasicThreadFactoryTest extends AbstractLangTest {
 
+    @Test
+    void testThreadCountWithoutNamingPattern() {
+        final BasicThreadFactory factory = BasicThreadFactory.builder().build();
+        assertNotNull(factory.newThread(() -> { }));
+        assertNotNull(factory.newThread(() -> { }));
+        assertEquals(2, factory.getThreadCount());
+    }
+
+    @Test
+    void testWrappedFactoryMayReturnNull() {
+        final BasicThreadFactory factory = BasicThreadFactory.builder().wrappedFactory(r -> null).namingPattern("worker-%d").build();
+        assertNull(factory.newThread(() -> { }));
+        assertEquals(0, factory.getThreadCount());
+    }
+
     /** Constant for the test naming pattern. */
     private static final String PATTERN = "testThread-%d";
 

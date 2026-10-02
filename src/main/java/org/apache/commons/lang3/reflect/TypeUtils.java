@@ -16,6 +16,7 @@
  */
 package org.apache.commons.lang3.reflect;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.GenericDeclaration;
@@ -85,9 +86,8 @@ public class TypeUtils {
          */
         @Override
         public int hashCode() {
-            int result = 67 << 4;
-            result |= componentType.hashCode();
-            return result;
+            // Match reflection's GenericArrayType so equal types work as map keys across implementations.
+            return componentType.hashCode();
         }
 
         /**
@@ -157,13 +157,8 @@ public class TypeUtils {
          */
         @Override
         public int hashCode() {
-            int result = 71 << 4;
-            result |= raw.hashCode();
-            result <<= 4;
-            result |= Objects.hashCode(useOwner);
-            result <<= 8;
-            result |= Arrays.hashCode(typeArguments);
-            return result;
+            // ParameterizedType equality also includes instances supplied by the JDK.
+            return Arrays.hashCode(typeArguments) ^ Objects.hashCode(useOwner) ^ raw.hashCode();
         }
 
         /**
@@ -977,10 +972,9 @@ public class TypeUtils {
             }
             return false;
         }
-        // the only classes to which a generic array type can be assigned
-        // are class Object and array classes
+        // Generic arrays implement the same marker interfaces as ordinary arrays.
         if (type instanceof GenericArrayType) {
-            return toClass.equals(Object.class)
+            return toClass.equals(Object.class) || toClass.equals(Cloneable.class) || toClass.equals(Serializable.class)
                     || toClass.isArray() && isAssignable(((GenericArrayType) type).getGenericComponentType(), toClass.getComponentType());
         }
         // wildcard types are not assignable to a class (though one would think
@@ -1379,7 +1373,7 @@ public class TypeUtils {
         for (final Type type1 : bounds) {
             boolean subtypeFound = false;
             for (final Type type2 : bounds) {
-                if (type1 != type2 && isAssignable(type2, type1, null)) {
+                if (!equals(type1, type2) && isAssignable(type2, type1, null)) {
                     subtypeFound = true;
                     break;
                 }
@@ -1727,7 +1721,12 @@ public class TypeUtils {
                 if (!visited.add(var)) {
                     return var;
                 }
-                return unrollVariables(typeArguments, typeArguments.get(type), visited);
+                try {
+                    return unrollVariables(typeArguments, typeArguments.get(type), visited);
+                } finally {
+                    // A variable can occur in several sibling arguments without forming a cycle.
+                    visited.remove(var);
+                }
             }
             if (type instanceof ParameterizedType) {
                 final ParameterizedType p = (ParameterizedType) type;

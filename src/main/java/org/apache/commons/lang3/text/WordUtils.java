@@ -165,7 +165,7 @@ public class WordUtils {
      * <pre>
      * WordUtils.capitalizeFully(null, *)            = null
      * WordUtils.capitalizeFully("", *)              = ""
-     * WordUtils.capitalizeFully(*, null)            = *
+     * WordUtils.capitalizeFully("i am FINE", null) = "I Am Fine"
      * WordUtils.capitalizeFully(*, new char[0])     = *
      * WordUtils.capitalizeFully("i aM.fine", {'.'}) = "I am.Fine"
      * </pre>
@@ -437,7 +437,7 @@ public class WordUtils {
      * <pre>
      * WordUtils.uncapitalize(null, *)            = null
      * WordUtils.uncapitalize("", *)              = ""
-     * WordUtils.uncapitalize(*, null)            = *
+     * WordUtils.uncapitalize("I Am FINE", null) = "i am fINE"
      * WordUtils.uncapitalize(*, new char[0])     = *
      * WordUtils.uncapitalize("I AM.FINE", {'.'}) = "i AM.fINE"
      * </pre>

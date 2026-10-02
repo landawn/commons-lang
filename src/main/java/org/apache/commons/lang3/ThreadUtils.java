@@ -486,7 +486,8 @@ public class ThreadUtils {
     }
 
     private static <T> Predicate<T> namePredicate(final String name, final Function<T, String> nameGetter) {
-        return (Predicate<T>) t -> t != null && Objects.equals(nameGetter.apply(t), Objects.requireNonNull(name, "name"));
+        Objects.requireNonNull(name, "name");
+        return (Predicate<T>) t -> t != null && Objects.equals(nameGetter.apply(t), name);
     }
 
     private static Predicate<Thread> predicateThread(final String threadName) {

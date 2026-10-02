@@ -84,10 +84,10 @@ public interface FailablePredicate<T, E extends Throwable> {
     }
 
     /**
-     * Returns a composed {@link FailablePredicate} like {@link Predicate#and(Predicate)}.
+     * Returns a composed {@link FailablePredicate} like {@link Predicate#or(Predicate)}.
      *
      * @param other A predicate that will be logically-ORed with this predicate.
-     * @return A composed {@link FailablePredicate} like {@link Predicate#and(Predicate)}.
+     * @return A composed {@link FailablePredicate} like {@link Predicate#or(Predicate)}.
      * @throws NullPointerException Thrown if other is null.
      */
     default FailablePredicate<T, E> or(final FailablePredicate<? super T, E> other) {

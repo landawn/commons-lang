@@ -783,6 +783,15 @@ class StrTokenizerTest extends AbstractLangTest {
         };
         assertEquals("x", tkn.next());
         assertEquals("y", tkn.next());
+        assertEquals("z", tkn.next());
+        assertFalse(tkn.hasNext());
+    }
+
+    @Test
+    void testTokenizeNonzeroOffsetWithTrailingDelimiter() {
+        final StrTokenizer tokenizer = StrTokenizer.getCSVInstance();
+        assertEquals(Arrays.asList("a", ""), tokenizer.tokenize("xxa,yy".toCharArray(), 2, 2));
+        assertEquals(Arrays.asList("a", "b"), tokenizer.tokenize("xxa,byy".toCharArray(), 2, 3));
     }
 
     @Test

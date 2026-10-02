@@ -46,7 +46,7 @@ abstract class AbstractFormatCache<F extends Format> {
         private final int hashCode;
 
         /**
-         * Constructs an instance of {@link MultipartKey} to hold the specified objects.
+         * Constructs an instance of {@link ArrayKey} to hold the specified objects.
          *
          * @param keys The set of objects that make up the key.  Each key may be null.
          */
@@ -153,7 +153,7 @@ abstract class AbstractFormatCache<F extends Format> {
      * time zone and locale.
      *
      * @param dateStyle  date style: FULL, LONG, MEDIUM, or SHORT.
-     * @param timeZone  optional time zone, overrides time zone of formatted date, null means use default Locale.
+     * @param timeZone  optional time zone, overrides time zone of formatted date, null means use the default time zone.
      * @param locale  optional locale, overrides system locale.
      * @return A localized standard date/time formatter.
      * @throws IllegalArgumentException Thrown if the Locale has no date/time pattern defined.
@@ -169,7 +169,7 @@ abstract class AbstractFormatCache<F extends Format> {
      *
      * @param dateStyle  date style: FULL, LONG, MEDIUM, or SHORT.
      * @param timeStyle  time style: FULL, LONG, MEDIUM, or SHORT.
-     * @param timeZone  optional time zone, overrides time zone of formatted date, null means use default Locale.
+     * @param timeZone  optional time zone, overrides time zone of formatted date, null means use the default time zone.
      * @param locale  optional locale, overrides system locale.
      * @return A localized standard date/time formatter.
      * @throws IllegalArgumentException Thrown if the Locale has no date/time pattern defined.
@@ -185,7 +185,7 @@ abstract class AbstractFormatCache<F extends Format> {
      *
      * @param dateStyle  date style: FULL, LONG, MEDIUM, or SHORT, null indicates no date in format.
      * @param timeStyle  time style: FULL, LONG, MEDIUM, or SHORT, null indicates no time in format.
-     * @param timeZone  optional time zone, overrides time zone of formatted date, null means use default Locale.
+     * @param timeZone  optional time zone, overrides time zone of formatted date, null means use the default time zone.
      * @param locale  optional locale, overrides system locale.
      * @return A localized standard date/time formatter.
      * @throws IllegalArgumentException Thrown if the Locale has no date/time pattern defined.
@@ -236,7 +236,7 @@ abstract class AbstractFormatCache<F extends Format> {
      * time zone and locale.
      *
      * @param timeStyle  time style: FULL, LONG, MEDIUM, or SHORT.
-     * @param timeZone  optional time zone, overrides time zone of formatted date, null means use default Locale.
+     * @param timeZone  optional time zone, overrides time zone of formatted date, null means use the default time zone.
      * @param locale  optional locale, overrides system locale.
      * @return A localized standard date/time formatter.
      * @throws IllegalArgumentException Thrown if the Locale has no date/time pattern defined.

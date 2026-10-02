@@ -38,6 +38,30 @@ import org.junit.jupiter.api.Test;
  */
 class JsonToStringStyleTest extends AbstractBuilderTest {
 
+    @Test
+    void testNullToStringResult() {
+        final Object value = new Object() {
+            @Override
+            public String toString() {
+                return null;
+            }
+        };
+        assertEquals("{\"value\":null}", new ToStringBuilder(new Object(), ToStringStyle.JSON_STYLE).append("value", value).toString());
+    }
+
+    @Test
+    void testJsonRepresentationEvaluatedOnce() {
+        final Object value = new Object() {
+            private int calls;
+
+            @Override
+            public String toString() {
+                return calls++ == 0 ? "{}" : "changed";
+            }
+        };
+        assertEquals("{\"value\":{}}", new ToStringBuilder(new Object(), ToStringStyle.JSON_STYLE).append("value", value).toString());
+    }
+
     static class AcademyClass {
         Teacher teacher;
         List<Student> students;

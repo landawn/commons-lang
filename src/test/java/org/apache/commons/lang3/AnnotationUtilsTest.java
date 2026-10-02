@@ -472,6 +472,9 @@ class AnnotationUtilsTest extends AbstractLangTest {
 
     @Test
     void testIsValidAnnotationMemberType() {
+        assertFalse(AnnotationUtils.isValidAnnotationMemberType(void.class));
+        assertFalse(AnnotationUtils.isValidAnnotationMemberType(null));
+        assertFalse(AnnotationUtils.isValidAnnotationMemberType(String[][].class));
         for (final Class<?> type : new Class[] { byte.class, short.class, int.class, char.class,
                 long.class, float.class, double.class, boolean.class, String.class, Class.class,
                 NestAnnotation.class, TestAnnotation.class, Stooge.class, ElementType.class }) {

@@ -178,7 +178,7 @@ public class DurationFormatUtils {
          */
         @Override
         public int hashCode() {
-            return this.value.hashCode();
+            return value instanceof StringBuilder ? value.toString().hashCode() : value.hashCode();
         }
 
         /**
@@ -657,6 +657,8 @@ public class DurationFormatUtils {
                 optionalIndex++;
                 inOptional = true;
                 previous = null;
+                // A literal on either side of a bracket belongs to a different optional scope.
+                buffer = null;
                 break;
             case ']':
                 if (!inOptional) {
@@ -664,6 +666,7 @@ public class DurationFormatUtils {
                 }
                 inOptional = false;
                 previous = null;
+                buffer = null;
                 break;
             case '\'':
                 if (inLiteral) {

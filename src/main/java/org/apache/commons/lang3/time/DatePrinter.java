@@ -38,7 +38,7 @@ public interface DatePrinter {
     /**
      * Formats a {@link Calendar} object.
      * The TimeZone set on the Calendar is only used to adjust the time offset.
-     * The TimeZone specified during the construction of the Parser will determine the TimeZone
+     * The TimeZone specified during the construction of the printer will determine the TimeZone
      * used in the formatted string.
      *
      * @param calendar  The calendar to format.
@@ -49,7 +49,7 @@ public interface DatePrinter {
     /**
      * Formats a {@link Calendar} object into the supplied {@link Appendable}.
      * The TimeZone set on the Calendar is only used to adjust the time offset.
-     * The TimeZone specified during the construction of the Parser will determine the TimeZone
+     * The TimeZone specified during the construction of the printer will determine the TimeZone
      * used in the formatted string.
      *
      * @param calendar  The calendar to format.
@@ -63,13 +63,13 @@ public interface DatePrinter {
     /**
      * Formats a {@link Calendar} object into the supplied {@link StringBuffer}.
      * The TimeZone set on the Calendar is only used to adjust the time offset.
-     * The TimeZone specified during the construction of the Parser will determine the TimeZone
+     * The TimeZone specified during the construction of the printer will determine the TimeZone
      * used in the formatted string.
      *
      * @param calendar  The calendar to format.
      * @param buf  The buffer to format into.
      * @return The specified string buffer.
-     * @deprecated Use {{@link #format(Calendar, Appendable)}.
+     * @deprecated Use {@link #format(Calendar, Appendable)}.
      */
     @Deprecated
     StringBuffer format(Calendar calendar, StringBuffer buf);
@@ -101,7 +101,7 @@ public interface DatePrinter {
      * @param date  The date to format.
      * @param buf  The buffer to format into.
      * @return The specified string buffer.
-     * @deprecated Use {{@link #format(Date, Appendable)}.
+     * @deprecated Use {@link #format(Date, Appendable)}.
      */
     @Deprecated
     StringBuffer format(Date date, StringBuffer buf);
@@ -134,7 +134,7 @@ public interface DatePrinter {
      * @param millis  The millisecond value to format.
      * @param buf  The buffer to format into.
      * @return The specified string buffer.
-     * @deprecated Use {{@link #format(long, Appendable)}.
+     * @deprecated Use {@link #format(long, Appendable)}.
      */
     @Deprecated
     StringBuffer format(long millis, StringBuffer buf);

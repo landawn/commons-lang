@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.lang.reflect.Constructor;
@@ -41,6 +42,29 @@ import org.junit.jupiter.api.Test;
  * </p>
  */
 public class ConstructorUtilsTest extends AbstractLangTest {
+
+    public static class RequiredVarArgs {
+        final Object[] values;
+
+        public RequiredVarArgs(final String first, final String second, final Object... values) {
+            this.values = values;
+        }
+    }
+
+    @Test
+    void testVarArgsRequireFixedArguments() {
+        assertNull(ConstructorUtils.getMatchingAccessibleConstructor(RequiredVarArgs.class));
+        assertNull(ConstructorUtils.getMatchingAccessibleConstructor(RequiredVarArgs.class, String.class));
+        assertThrows(NoSuchMethodException.class, () -> ConstructorUtils.invokeConstructor(RequiredVarArgs.class));
+        assertThrows(NoSuchMethodException.class, () -> ConstructorUtils.invokeConstructor(RequiredVarArgs.class, "one"));
+    }
+
+    @Test
+    void testVarArgsCovariantArray() throws Exception {
+        final String[] values = { "one", "two" };
+        final RequiredVarArgs result = ConstructorUtils.invokeConstructor(RequiredVarArgs.class, "first", "second", values);
+        assertSame(values, result.values);
+    }
 
     private static class BaseClass {
     }

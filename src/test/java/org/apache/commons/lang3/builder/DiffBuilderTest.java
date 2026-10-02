@@ -34,6 +34,22 @@ import org.junit.jupiter.api.Test;
  */
 class DiffBuilderTest extends AbstractBuilderTest {
 
+    @Test
+    void testDifferentArrayKinds() {
+        final Object[] values = { new int[] { 1 }, new long[] { 1 }, new String[] { "one" }, "one" };
+        for (int i = 0; i < values.length; i++) {
+            for (int j = 0; j < values.length; j++) {
+                if (i != j) {
+                    final DiffResult<Object> result = DiffBuilder.builder().setLeft(new Object()).setRight(new Object()).build()
+                            .append("value", values[i], values[j]).build();
+                    assertEquals(1, result.getNumberOfDiffs());
+                    assertSame(values[i], result.getDiffs().get(0).getLeft());
+                    assertSame(values[j], result.getDiffs().get(0).getRight());
+                }
+            }
+        }
+    }
+
     /**
      * Test fixture.
      */

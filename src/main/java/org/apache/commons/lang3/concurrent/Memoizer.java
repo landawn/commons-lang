@@ -27,7 +27,7 @@ import java.util.function.Function;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
- * Definition of an interface for a wrapper around a calculation that takes a single parameter and returns a result. The
+ * A wrapper around a calculation that takes a single parameter and returns a result. The
  * results for the calculation will be cached for future requests.
  *
  * <p>
@@ -121,8 +121,9 @@ public class Memoizer<I, O> implements Computable<I, O> {
      * <p>
      * The calculation for a given argument runs at most once per cached entry and executes <em>outside</em> any internal
      * lock of the backing map (the pattern published in <em>Java Concurrency in Practice</em>): a slow calculation for
-     * one key does not block calls for unrelated keys, and a calculation may itself use this Memoizer without
-     * deadlocking. Concurrent callers for the same argument wait on the same {@link Future}.
+     * one key does not block calls for unrelated keys. A calculation may use this Memoizer for other keys, provided those
+     * calculations do not form a dependency cycle. Recursively requesting the same in-progress key deadlocks.
+     * Concurrent callers for the same argument wait on the same {@link Future}.
      * </p>
      *
      * @param arg The argument for the calculation

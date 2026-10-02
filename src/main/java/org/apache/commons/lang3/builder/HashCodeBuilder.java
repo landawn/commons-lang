@@ -111,13 +111,13 @@ import org.apache.commons.lang3.builder.AbstractReflection.AbstractBuilder;
 public class HashCodeBuilder extends AbstractReflection implements Builder<Integer> {
 
     /**
-     * Builds instances of CompareToBuilder.
+     * Builds instances of HashCodeBuilder with an initial value of 17 and a multiplier of 37 by default.
      */
     public static class Builder extends AbstractBuilder<Builder> {
 
-        private int initialOddNumber;
+        private int initialOddNumber = DEFAULT_INITIAL_VALUE;
 
-        private int multiplierOddNumber;
+        private int multiplierOddNumber = DEFAULT_MULTIPLIER_VALUE;
 
         /**
          * Constructs a new Builder instance.
@@ -595,7 +595,8 @@ public class HashCodeBuilder extends AbstractReflection implements Builder<Integ
         Validate.isTrue(builder.initialOddNumber % 2 != 0, "HashCodeBuilder requires an odd initial value");
         Validate.isTrue(builder.multiplierOddNumber % 2 != 0, "HashCodeBuilder requires an odd multiplier");
         constant = builder.multiplierOddNumber;
-        total = builder.initialOddNumber;    }
+        total = builder.initialOddNumber;
+    }
 
     /**
      * Two randomly chosen, odd numbers must be passed in. Ideally these should be different for each class,
@@ -619,7 +620,7 @@ public class HashCodeBuilder extends AbstractReflection implements Builder<Integ
      * Appends a {@code hashCode} for a {@code boolean}.
      *
      * <p>
-     * This adds {@code 1} when true, and {@code 0} when false to the {@code hashCode}.
+     * This adds {@code 0} when true, and {@code 1} when false to the {@code hashCode}.
      * </p>
      * <p>
      * This is in contrast to the standard {@link Boolean#hashCode()} handling, which computes

@@ -18,6 +18,8 @@ package org.apache.commons.lang3.builder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.Collections;
+
 import org.apache.commons.lang3.AbstractLangTest;
 import org.junit.jupiter.api.Test;
 
@@ -25,6 +27,16 @@ import org.junit.jupiter.api.Test;
  * Test case for ToStringStyle.
  */
 class ToStringStyleTest extends AbstractLangTest {
+
+    @Test
+    void testMapNullEntriesUseNullText() {
+        final StandardToStringStyle style = new StandardToStringStyle();
+        style.setUseClassName(false);
+        style.setUseIdentityHashCode(false);
+        style.setNullText("missing");
+        assertEquals("[map={missing=missing}]", new ToStringBuilder(new Object(), style)
+                .append("map", Collections.singletonMap(null, null)).toString());
+    }
 
     /**
      * An object used to test {@link ToStringStyle}.

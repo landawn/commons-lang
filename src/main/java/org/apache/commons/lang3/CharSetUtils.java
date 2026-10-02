@@ -37,7 +37,7 @@ import org.apache.commons.lang3.stream.Streams;
 public class CharSetUtils {
 
     /**
-     * Takes an argument in set-syntax, see evaluateSet,
+     * Takes an argument in set-syntax, see {@link CharSet#getInstance(String...)},
      * and identifies whether any of the characters are present in the specified string.
      *
      * <pre>
@@ -69,7 +69,7 @@ public class CharSetUtils {
     }
 
     /**
-     * Takes an argument in set-syntax, see evaluateSet,
+     * Takes an argument in set-syntax, see {@link CharSet#getInstance(String...)},
      * and returns the number of characters present in the specified string.
      *
      * <pre>
@@ -112,7 +112,7 @@ public class CharSetUtils {
     }
 
     /**
-     * Takes an argument in set-syntax, see evaluateSet,
+     * Takes an argument in set-syntax, see {@link CharSet#getInstance(String...)},
      * and deletes any of characters present in the specified string.
      *
      * <pre>
@@ -141,7 +141,7 @@ public class CharSetUtils {
     }
 
     /**
-     * Takes an argument in set-syntax, see evaluateSet,
+     * Takes an argument in set-syntax, see {@link CharSet#getInstance(String...)},
      * and keeps any of characters present in the specified string.
      *
      * <pre>
@@ -242,7 +242,7 @@ public class CharSetUtils {
 
     /**
      * CharSetUtils instances should NOT be constructed in standard programming.
-     * Instead, the class should be used as {@code CharSetUtils.evaluateSet(null);}.
+     * Instead, the class should be used as {@code CharSetUtils.containsAny("hello", "aeiou");}.
      *
      * <p>
      * This constructor is public to permit tools that require a JavaBean instance

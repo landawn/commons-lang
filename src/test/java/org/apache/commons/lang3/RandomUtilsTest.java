@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Random;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -62,6 +63,37 @@ class RandomUtilsTest extends AbstractLangTest {
     @Test
     void testConstructor() {
         assertNotNull(new RandomUtils());
+    }
+
+    @Test
+    void testFloatingPointExclusiveUpperBounds() {
+        final Random random = new Random() {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public double nextDouble() {
+                return Math.nextDown(1d);
+            }
+
+            @Override
+            public float nextFloat() {
+                return Math.nextDown(1f);
+            }
+        };
+        final RandomUtils utils = new RandomUtils() {
+            @Override
+            Random random() {
+                return random;
+            }
+        };
+        for (final double start : new double[] {0, 1, Math.nextDown(Double.MAX_VALUE)}) {
+            assertEquals(start, utils.randomDouble(start, Math.nextUp(start)));
+        }
+        for (final float start : new float[] {0, 1, Math.nextDown(Float.MAX_VALUE)}) {
+            assertEquals(start, utils.randomFloat(start, Math.nextUp(start)));
+        }
+        assertEquals(1d, utils.randomDouble(1d, 1d));
+        assertEquals(1f, utils.randomFloat(1f, 1f));
     }
 
     /**

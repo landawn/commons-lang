@@ -40,6 +40,28 @@ import org.junit.jupiter.api.Test;
  */
 class ConcurrentUtilsTest extends AbstractLangTest {
 
+    @Test
+    void testInitializeUncheckedPreservesExceptionWithoutCause() {
+        final ConcurrentException failure = new ConcurrentException("initialization failed");
+        final ConcurrentRuntimeException exception = assertThrows(ConcurrentRuntimeException.class,
+                () -> ConcurrentUtils.initializeUnchecked(() -> {
+                    throw failure;
+                }));
+        assertSame(failure, exception.getCause());
+    }
+
+    @Test
+    void testCreateIfAbsentUncheckedPreservesExceptionWithoutCause() {
+        final ConcurrentException failure = new ConcurrentException("initialization failed");
+        final ConcurrentMap<String, Object> map = new ConcurrentHashMap<>();
+        final ConcurrentRuntimeException exception = assertThrows(ConcurrentRuntimeException.class,
+                () -> ConcurrentUtils.createIfAbsentUnchecked(map, "key", () -> {
+                    throw failure;
+                }));
+        assertSame(failure, exception.getCause());
+        assertTrue(map.isEmpty());
+    }
+
     /**
      * Tests constant future.
      *

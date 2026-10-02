@@ -22,6 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.AbstractLangTest;
 import org.junit.jupiter.api.Test;
@@ -31,6 +33,24 @@ import org.junit.jupiter.api.Test;
  */
 @Deprecated
 class EntityArraysTest extends AbstractLangTest {
+
+    @Test
+    void testMappingRowsAreIndependent() {
+        Stream.<Supplier<String[][]>>of(EntityArrays::APOS_ESCAPE, EntityArrays::APOS_UNESCAPE,
+                EntityArrays::BASIC_ESCAPE, EntityArrays::BASIC_UNESCAPE,
+                EntityArrays::HTML40_EXTENDED_ESCAPE, EntityArrays::HTML40_EXTENDED_UNESCAPE,
+                EntityArrays::ISO8859_1_ESCAPE, EntityArrays::ISO8859_1_UNESCAPE,
+                EntityArrays::JAVA_CTRL_CHARS_ESCAPE, EntityArrays::JAVA_CTRL_CHARS_UNESCAPE).forEach(supplier -> {
+                    final String[][] table = supplier.get();
+                    final String original = table[0][0];
+                    try {
+                        table[0][0] = "changed";
+                        assertEquals(original, supplier.get()[0][0]);
+                    } finally {
+                        table[0][0] = original;
+                    }
+                });
+    }
 
     @Test
     void testBasicApostrophe() {

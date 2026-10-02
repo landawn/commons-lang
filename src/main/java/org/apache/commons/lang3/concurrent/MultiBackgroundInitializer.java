@@ -264,7 +264,8 @@ public class MultiBackgroundInitializer extends BackgroundInitializer<MultiBackg
     /**
      * Calls the closer of all child {@code BackgroundInitializer} objects.
      *
-     * @throws ConcurrentException Thrown with all other exceptions as suppressed exceptions. ConcurrentException instances thrown by children are unwrapped.
+     * @throws ConcurrentException Thrown with all other exceptions as suppressed exceptions. ConcurrentException instances thrown by children are unwrapped
+     *         only when they have a cause and no suppressed exceptions of their own.
      * @since 3.14.0
      */
     @Override
@@ -277,11 +278,10 @@ public class MultiBackgroundInitializer extends BackgroundInitializer<MultiBackg
                 if (exception == null) {
                     exception = new ConcurrentException();
                 }
-                if (e instanceof ConcurrentException) {
-                    // Because ConcurrentException is only created by classes in this package
-                    // we can safely unwrap it.
+                if (e instanceof ConcurrentException && e.getCause() != null && e.getSuppressed().length == 0) {
                     exception.addSuppressed(e.getCause());
                 } else {
+                    // Nested initializers aggregate failures as suppressed exceptions, without a cause.
                     exception.addSuppressed(e);
                 }
             }

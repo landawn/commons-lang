@@ -57,7 +57,8 @@ import org.apache.commons.lang3.function.FailableConsumer;
  * }
  * }</pre>
  * <p>
- * Events are fired
+ * Events are delivered synchronously to listeners in registration order.
+ * </p>
  * <p>
  * Serializing an {@link EventListenerSupport} instance will result in any non-{@link Serializable} listeners being silently dropped.
  * </p>

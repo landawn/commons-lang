@@ -541,8 +541,8 @@ public class StringEscapeUtils {
      * </p>
      *
      * <p>
-     * The only difference between Java strings and JavaScript strings
-     * is that in JavaScript, a single quote and forward-slash (/) are escaped.
+     * Unlike this method, {@link #escapeEcmaScript(String)} also escapes single quotes, backticks,
+     * the template interpolation sequence <code>${</code>, and forward slashes (/).
      * </p>
      *
      * <p>
@@ -839,9 +839,9 @@ public class StringEscapeUtils {
      * </p>
      *
      * <p>
-     * Note that numerical \\u Unicode codes are unescaped to their respective
-     *    Unicode characters. This may change in future releases.
-     *    </p>
+     * Decimal and hexadecimal numeric character references, such as {@code &#65;} and {@code &#x41;},
+     * are unescaped to their Unicode characters. Java-style Unicode escapes are not processed.
+     * </p>
      *
      * @param input  The {@link String} to unescape, may be null
      * @return A new unescaped {@link String}, {@code null} if null string input

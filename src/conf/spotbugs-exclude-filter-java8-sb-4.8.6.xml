@@ -218,6 +218,11 @@
   
   <!-- Reason: toString() can return null! -->
   <Match>
+    <Class name="org.apache.commons.lang3.builder.ToStringStyle$JsonToStringStyle" />
+    <Method name="appendDetail" params="java.lang.StringBuffer,java.lang.String,java.lang.Object" />
+    <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
+  </Match>
+  <Match>
     <Class name="org.apache.commons.lang3.compare.ObjectToStringComparator" />
     <Method name="compare" />
     <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE, ES_COMPARING_STRINGS_WITH_EQ" />

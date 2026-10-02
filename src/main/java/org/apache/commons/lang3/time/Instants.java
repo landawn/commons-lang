@@ -38,7 +38,7 @@ public class Instants {
      * <li>If the instant is null, treat it as {@link Instant#EPOCH}.</li>
      * </ul>
      *
-     * @param instant The instant to convert, not null.
+     * @param instant The instant to convert, may be null.
      * @return long The given Instant in milliseconds.
      * @see Instant#toEpochMilli()
      * @see Long#MIN_VALUE
@@ -82,7 +82,7 @@ public class Instants {
      * <li>If the instant is null, treat it as {@link Instant#EPOCH}.</li>
      * </ul>
      *
-     * @param instant The instant to convert, not null.
+     * @param instant The instant to convert, may be null.
      * @return long The duration in milliseconds since the given Instant.
      */
     public static long toMillisSince(final Instant instant) {

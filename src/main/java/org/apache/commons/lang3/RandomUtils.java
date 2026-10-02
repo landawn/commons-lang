@@ -345,7 +345,9 @@ public class RandomUtils {
         if (startInclusive == endExclusive) {
             return startInclusive;
         }
-        return startInclusive + (endExclusive - startInclusive) * random().nextDouble();
+        final double result = startInclusive + (endExclusive - startInclusive) * random().nextDouble();
+        // Rounding can produce the excluded upper bound, especially for adjacent representable values.
+        return result < endExclusive ? result : Math.nextDown(endExclusive);
     }
 
     /**
@@ -374,7 +376,9 @@ public class RandomUtils {
         if (startInclusive == endExclusive) {
             return startInclusive;
         }
-        return startInclusive + (endExclusive - startInclusive) * random().nextFloat();
+        final float result = startInclusive + (endExclusive - startInclusive) * random().nextFloat();
+        // Rounding can produce the excluded upper bound, especially for adjacent representable values.
+        return result < endExclusive ? result : Math.nextDown(endExclusive);
     }
 
     /**

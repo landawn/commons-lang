@@ -128,6 +128,26 @@ class EventCountCircuitBreakerTest extends AbstractLangTest {
     /** Constant for the factor for converting nanoseconds. */
     private static final long NANO_FACTOR = 1000L * 1000L * 1000L;
 
+    @Test
+    void testEventCountOverflowOpensBreaker() {
+        final EventCountCircuitBreakerTestImpl breaker = new EventCountCircuitBreakerTestImpl(Integer.MAX_VALUE, 1,
+                TimeUnit.SECONDS, 1, 1, TimeUnit.SECONDS);
+        assertTrue(breaker.incrementAndCheckState(Integer.MAX_VALUE));
+        assertFalse(breaker.incrementAndCheckState(1));
+        assertTrue(breaker.isOpen());
+    }
+
+    @Test
+    void testEventCountOverflowDoesNotCloseBreaker() {
+        final EventCountCircuitBreakerTestImpl breaker = new EventCountCircuitBreakerTestImpl(1, 1,
+                TimeUnit.SECONDS, 1, 1, TimeUnit.SECONDS);
+        breaker.open();
+        assertFalse(breaker.incrementAndCheckState(Integer.MAX_VALUE));
+        assertFalse(breaker.incrementAndCheckState(Integer.MAX_VALUE));
+        assertFalse(breaker.at(NANO_FACTOR + 1).checkState());
+        assertTrue(breaker.at(2 * NANO_FACTOR + 2).checkState());
+    }
+
     /**
      * Tests whether a new check interval is started if the circuit breaker has a
      * transition to open state.

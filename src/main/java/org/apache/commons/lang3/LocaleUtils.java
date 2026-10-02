@@ -158,20 +158,20 @@ public class LocaleUtils {
     }
 
     /**
-     * Tests whether the given Locale defines a variant.
+     * Tests whether the given Locale has an empty country.
      *
      * @param locale The Locale to test.
-     * @return whether the given Locale defines a variant.
+     * @return whether the given Locale has an empty country.
      */
     private static boolean hasCountry(final Locale locale) {
         return locale.getCountry().isEmpty();
     }
 
     /**
-     * Tests whether the given Locale defines a country.
+     * Tests whether the given Locale has an empty variant.
      *
      * @param locale The Locale to test.
-     * @return whether the given Locale defines a country.
+     * @return whether the given Locale has an empty variant.
      */
     private static boolean hasVariant(final Locale locale) {
         return locale.getVariant().isEmpty();

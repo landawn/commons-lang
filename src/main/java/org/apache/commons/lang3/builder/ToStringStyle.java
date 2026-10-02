@@ -265,8 +265,14 @@ public abstract class ToStringStyle implements Serializable {
                 return;
             }
             final String valueAsString = value.toString();
+            // User-defined toString implementations can return null despite the usual convention.
+            if (valueAsString == null) {
+                appendNullText(buffer, fieldName);
+                return;
+            }
             if (isJsonObject(valueAsString) || isJsonArray(valueAsString)) {
-                buffer.append(value);
+                // Reuse the inspected representation: toString() need not return the same value twice.
+                buffer.append(valueAsString);
                 return;
             }
             appendDetail(buffer, fieldName, valueAsString);
@@ -1543,10 +1549,14 @@ public abstract class ToStringStyle implements Serializable {
      *
      * @param buffer    The {@link StringBuffer} to populate.
      * @param fieldName The field name, typically not used as already appended.
-     * @param value     The value to add to the {@code toString}, not {@code null}.
+     * @param value     The value to add to the {@code toString}, may be {@code null}.
      * @param detail    output detail or not.
      */
     protected void appendInternal(final StringBuffer buffer, final String fieldName, final Object value, final boolean detail) {
+        if (value == null) {
+            appendNullText(buffer, fieldName);
+            return;
+        }
         if (isRegistered(value) && !(value instanceof Number || value instanceof Boolean || value instanceof Character)) {
             appendCyclicObject(buffer, fieldName, value);
             return;

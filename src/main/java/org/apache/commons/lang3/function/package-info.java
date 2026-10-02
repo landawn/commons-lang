@@ -16,7 +16,7 @@
  */
 
 /**
- * Provides functional interfaces to complement those in {@code java.lang.function} and utilities for working with Java
+ * Provides functional interfaces to complement those in {@code java.util.function} and utilities for working with Java
  * 8 lambdas.
  *
  * <p>

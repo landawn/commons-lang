@@ -242,6 +242,14 @@ class ExtendedMessageFormatTest extends AbstractLangTest {
 
     private final Map<String, FormatFactory> registry = new HashMap<>();
 
+    @Test
+    void testCustomFormatNameWithTrailingWhitespace() {
+        final String pattern = "{0, upper }";
+        final ExtendedMessageFormat format = new ExtendedMessageFormat(pattern, registry);
+        assertEquals("ABC", format.format(new Object[] {"abc"}));
+        assertEquals("ABC", new ExtendedMessageFormat(format.toPattern(), registry).format(new Object[] {"abc"}));
+    }
+
     /**
      * Create an ExtendedMessageFormat for the specified pattern and locale and check the
      * formatted output matches the expected result for the parameters.

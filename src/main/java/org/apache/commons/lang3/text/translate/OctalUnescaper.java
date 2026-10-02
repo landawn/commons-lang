@@ -27,7 +27,7 @@ import org.apache.commons.lang3.CharUtils;
  * For example, "\45" should go back to being the specific value (a %).
  *
  * Note that this currently only supports the viable range of octal for Java; namely
- * 1 to 377. This is because parsing Java is the main use case.
+ * 0 to 377. This is because parsing Java is the main use case.
  *
  * @since 3.0
  * @deprecated As of <a href="https://commons.apache.org/proper/commons-lang/changes-report.html#a3.6">3.6</a>, use Apache Commons Text
